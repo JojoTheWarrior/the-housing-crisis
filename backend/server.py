@@ -57,7 +57,10 @@ def simulate_turn():
 @app.route("/send-district-coords", methods=["POST"])
 @cross_origin()
 def send_district_coords():
+    global STATE, DISTRICT_TO_COORDS
+
     DISTRICT_TO_COORDS = json.loads(request.get_data(as_text=True))
+    # print(DISTRICT_TO_COORDS)
     # STATE['districts'] = data
 
     for k,v in DISTRICT_TO_COORDS.items():
@@ -71,43 +74,41 @@ def send_district_coords():
     # initialize default state of the world
     sprites = {
         "house": [
-            choice(DISTRICT_TO_COORDS['0']),
-            choice(DISTRICT_TO_COORDS['0']),
-            choice(DISTRICT_TO_COORDS['1'])
+            choice(DISTRICT_TO_COORDS['1']),
+            choice(DISTRICT_TO_COORDS['1']),
+            choice(DISTRICT_TO_COORDS['2'])
         ],
         "apartment": [
-            choice(DISTRICT_TO_COORDS['0']),
-            choice(DISTRICT_TO_COORDS['0']),
-            choice(DISTRICT_TO_COORDS['3']),
-            choice(DISTRICT_TO_COORDS['3']),
-            choice(DISTRICT_TO_COORDS['3'])
+            choice(DISTRICT_TO_COORDS['1']),
+            choice(DISTRICT_TO_COORDS['1']),
+            choice(DISTRICT_TO_COORDS['4']),
+            choice(DISTRICT_TO_COORDS['4']),
+            choice(DISTRICT_TO_COORDS['4'])
         ],
         "park": [
+            choice(DISTRICT_TO_COORDS['3']),
+            choice(DISTRICT_TO_COORDS['3']),
+            choice(DISTRICT_TO_COORDS['3']),
             choice(DISTRICT_TO_COORDS['2']),
-            choice(DISTRICT_TO_COORDS['2']),
-            choice(DISTRICT_TO_COORDS['2']),
-            choice(DISTRICT_TO_COORDS['1']),
-            choice(DISTRICT_TO_COORDS['3'])
+            choice(DISTRICT_TO_COORDS['4'])
         ],
         "subway": [
-            choice(DISTRICT_TO_COORDS['3'])
+            choice(DISTRICT_TO_COORDS['4'])
         ]
     }
 
     STATE['sprites'] = sprites
-
-    pprint(STATE)
     
     return {"status": "ok"}
 
 
-@app.route("/send-district-coords", methods=["POST"])
+@app.route("/send-prompt", methods=["POST"])
 @cross_origin()
 def send_prompt():
     data = json.loads(request.get_data(as_text=True))
 
-    updated_city_states = call_gemini(data['prompt'], STATES)
-    STATES['districts'] = updated_city_states[0]['districts']
+    updated_city_states = call_gemini(data['prompt'], STATE)
+    STATE['districts'] = updated_city_states[0]['districts']
     all_new_additions = updated_city_states[1]
 
 
@@ -125,8 +126,15 @@ def send_prompt():
             else:
                 game_state[k] = [district_from_coords(coordinate)]
 
-    # we now have game_stae and all_new_additions
+    # we now have game_state and all_new_additions
     # which are the two prerequisites for the main step
+
+    print("--- HERE ---")
+    print(all_new_additions)
+    pprint(game_state)
+
+
+    return {'status': 'ok'}
 
 
 if __name__ == "__main__":

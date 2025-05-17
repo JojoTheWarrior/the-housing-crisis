@@ -175,7 +175,7 @@ function generate_districts() {
 				x,
 				y,
 				(perlin(origin_points[min_index][0], origin_points[min_index][1])) * PERLIN_AMPLIFICATION,
-				min_index,
+				min_index + 1,
 				colours[min_index]
 			));
 		}

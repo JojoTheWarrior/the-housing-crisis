@@ -71,8 +71,8 @@ def call_gemini(prompt, city_states):
 
     # Extract all the new additions into a single string
     all_new_additions = ". ".join([
-        f"District {district['number']}: {district['new_additions']}"
-        for district in updated_city_states.get("districts", {}).values()
+        f"District {number}: {district['new_additions']}"
+        for number, district in updated_city_states.get("districts", {}).items()
         if district.get("new_additions")
     ])
 
