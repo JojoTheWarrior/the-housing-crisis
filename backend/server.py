@@ -1,10 +1,30 @@
 from flask import Flask, request, jsonify, send_file
-import gemini_handler
+from flask_cors import CORS, cross_origin
+# import gemini_handler
 import make_building
 import io
 import base64
+import json
+from random import choice, randint
+from pprint import pprint
+from update_city import call_gemini
 
 app = Flask(__name__)
+cors = CORS(app) # allow CORS for all domains on all routes.
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
+STATE = {
+    "sprites": {
+
+    },
+    "districts": {
+
+    }
+}
+
+DISTRICT_TO_COORDS = {}
+
 
 @app.route("/generate_building", methods=["POST"])
 def get_image():
@@ -33,6 +53,82 @@ def simulate_turn():
         "updated_game_state": updated_state,
         "ai_feedback": feedback
     })
+
+@app.route("/send-district-coords", methods=["POST"])
+@cross_origin()
+def send_district_coords():
+    DISTRICT_TO_COORDS = json.loads(request.get_data(as_text=True))
+    print(data)
+    # STATE['districts'] = data
+
+    for k,v in data.items():
+        STATE['districts'][k] = {
+            "avg_house_price": randint(1_000_000, 2_000_000),
+            "public_support": randint(1,100) / 100,
+            "population": randint(50_000, 100_000),
+            "new_additions": ""
+        }
+
+    # initialize default state of the world
+    sprites = {
+        "house": [
+            choice(data['0']),
+            choice(data['0']),
+            choice(data['1'])
+        ],
+        "apartment": [
+            choice(data['0']),
+            choice(data['0']),
+            choice(data['3']),
+            choice(data['3']),
+            choice(data['3'])
+        ],
+        "park": [
+            choice(data['2']),
+            choice(data['2']),
+            choice(data['2']),
+            choice(data['1']),
+            choice(data['3'])
+        ],
+        "subway": [
+            choice(data['3'])
+        ]
+    }
+
+    STATE['sprites'] = sprites
+
+    pprint(STATE)
+    
+    return {"status": "ok"}
+
+
+@app.route("/send-district-coords", methods=["POST"])
+@cross_origin()
+def send_prompt():
+    data = json.loads(request.get_data(as_text=True))
+
+    updated_city_states = call_gemini(data['prompt'], STATES)
+    STATES['districts'] = updated_city_states[0]['districts']
+    all_new_additions = updated_city_states[1]
+
+
+    def district_from_coords(coords):
+        for district, coordinates in DISTRICT_TO_COORDS.items():
+            if coords in coordinates:
+                return district
+        return None
+
+    game_state = {}
+    for k,v in STATE['sprites'].items():
+        for coordinate in v:
+            if k in game_state:
+                game_state[k].append(district_from_coords(coordinate))
+            else:
+                game_state[k] = [district_from_coords(coordinate)]
+
+    # we now have game_stae and all_new_additions
+    # which are the two prerequisites for the main step
+
 
 if __name__ == "__main__":
     app.run(debug=True)
