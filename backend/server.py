@@ -7,7 +7,7 @@ import base64
 import json
 from random import choice, randint
 from pprint import pprint
-from update_city import call_gemini
+from update_city import call_gemini, make_new_game_state
 
 app = Flask(__name__)
 cors = CORS(app) # allow CORS for all domains on all routes.
@@ -115,6 +115,8 @@ def send_district_coords():
 @app.route("/send-prompt", methods=["POST"])
 @cross_origin()
 def send_prompt():
+    global STATE
+
     data = json.loads(request.get_data(as_text=True))
 
     updated_city_states = call_gemini(data['prompt'], STATE)
@@ -128,6 +130,13 @@ def send_prompt():
                 return district
         return None
 
+    def generate_coordinates(d, taken):
+        available_set = set(DISTRICT_TO_COORDS[d])
+        taken_set = set(taken)
+        leftover = list(available_set.difference(taken_set))
+        return choice(leftover)
+
+
     game_state = {}
     for k,v in STATE['sprites'].items():
         for coordinate in v:
@@ -140,9 +149,44 @@ def send_prompt():
     # which are the two prerequisites for the main step
 
     print("--- HERE ---")
-    print(all_new_additions)
-    pprint(game_state)
 
+    new_game_state = make_new_game_state(game_state, all_new_additions)
+
+    pprint(new_game_state)
+    pprint(STATE['sprites'])
+
+
+    original_keys = set(STATE['sprites'].keys())
+    new_keys = set(new_game_state.keys())
+    new_structures = list(original_keys.difference(new_keys))
+
+    new_state = {}
+
+    for k,v in new_game_state.items():
+        new_state[k] = []
+
+        for i in range(len(v)):
+            district = new_game_state[k][i]
+
+            if district != '0':
+                # add existing coordinates
+                if len(new_state[k]) + 1 <= len(STATE['sprites'][k][i]):
+                    new_state[k].append(STATE['sprites'][k][i])
+
+                # generate new coordinates
+                else:
+                    new_state[k].append(generate_coordinates(district, STATE['sprites'][k]))
+
+                # no more space in district
+                if len(new_state[k]) >= len(DISTRICT_TO_COORDS[district]):
+                    new_state[k].pop()
+
+    pprint(new_state)
+    # STATE = new_state
+
+    # generate images based on new_structures
+    for structure in new_structures:
+        pass  # make call to image generating api
 
     return {'status': 'ok'}
 

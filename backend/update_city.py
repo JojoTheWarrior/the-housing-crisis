@@ -105,8 +105,22 @@ def make_new_game_state(game_state, all_new_additions):
     client = genai.Client(api_key=api_key)
 
     # Prepare the input for the model
-    preamble = f"""You are provided with a JSON object representing the current state of a city,\n 
-    {json.dumps(game_state, indent=2)}\n\nAdd the following new sprite additions: {all_new_additions}.\nEnsure each sprite has the correct district numbers.\n"""
+    preamble = f"""
+    You are provided with a JSON object representing the current state of a game city, which contains detailed information about each district,
+    including its current population, average house cost, public support, and physical structures.
+    This is the current game state: {game_state}.
+    You are also provided with a list of new sprite additions that should be incorporated into the existing game state.
+    These sprites should be correctly assigned to their respective districts and should reflect tangible,
+    visual changes to the city's physical environment. 
+    that each sprite is correctly matched to its respective district based on the district numbers provided.
+    When incorporating these sprites, maintain the original structure of the JSON object and do not add any unexpected fields.
+    Ensure the updated game state accurately captures the impact of these additions while preserving all existing information.
+    The AI model should also be able to make rational and logical decisions based on the input.
+    Sprites can be added and destroyed based on input about each district.
+    To destroy a sprite, change the district number to 0.
+    The list of the changes is described here: {all_new_additions}.
+    Return the updated game state as a well-structured JSON object.
+    """
 
     response = client.models.generate_content(
         model="gemini-2.0-flash",
@@ -117,7 +131,9 @@ def make_new_game_state(game_state, all_new_additions):
     )
 
     # Extract and return the updated game state from the response
-    new_game_state = json.loads(response.contents[0])
+    print(game_state)
+    new_game_state = json.loads(response.text)
+    print(new_game_state)
     return new_game_state
     
     
@@ -125,7 +141,9 @@ def make_new_game_state(game_state, all_new_additions):
 
 # Test the function
 if __name__ == "__main__":
-    make_new_game_state({'apartment': ['0', '0', '3', '3', '3'],
- 'house': ['0', '0', '1'],
- 'park': ['2', '2', '2', '1', '3'],
- 'subway': ['3']}, "Bomb distract 0")
+    make_new_game_state(
+        {'apartment': ['1', '1', '4', '4', '4'],
+ 'house': ['1', '1', '2'],
+ 'park': ['3', '3', '3', '2', '4'],
+ 'subway': ['4']}
+        , "Bomb district 1")
