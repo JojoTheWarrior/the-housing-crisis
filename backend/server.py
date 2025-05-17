@@ -7,7 +7,7 @@ import base64
 import json
 from random import choice, randint
 from pprint import pprint
-from update_city import call_gemini
+from update_city import call_gemini, make_new_game_state
 
 app = Flask(__name__)
 cors = CORS(app) # allow CORS for all domains on all routes.
@@ -140,9 +140,41 @@ def send_prompt():
     # which are the two prerequisites for the main step
 
     print("--- HERE ---")
-    print(all_new_additions)
-    pprint(game_state)
 
+    new_game_state = make_new_game_state(game_state, all_new_additions)
+
+    pprint(new_game_state)
+    pprint(STATE['sprites'])
+
+
+    original_keys = set(STATE['sprites'].keys())
+    new_keys = set(new_game_state.keys())
+    new_structures = list(original_keys.difference(new_keys))
+
+    new_state = {}
+
+    for k,v in new_game_state.items():
+        new_state[k] = []
+
+        for i in range(len(v)):
+            district = new_game_state[k][i]
+
+            if district != '0':
+                # add existing coordinates
+                if len(new_state[k]) + 1 <= len(STATE['sprites'][k][i]):
+                    new_state[k].append(STATE['sprites'][k][i])
+
+                # generate new coordinates
+                else:
+                    pass
+
+                # no more space in district
+                if len(new_state[k]) >= len(DISTRICT_TO_COORDS[district]):
+                    new_state[k].pop()
+
+    pprint(new_state)
+
+    # generate images based on new_structures
 
     return {'status': 'ok'}
 

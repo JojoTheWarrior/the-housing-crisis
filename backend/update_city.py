@@ -116,7 +116,8 @@ def make_new_game_state(game_state, all_new_additions):
     When incorporating these sprites, maintain the original structure of the JSON object and do not add any unexpected fields.
     Ensure the updated game state accurately captures the impact of these additions while preserving all existing information.
     The AI model should also be able to make rational and logical decisions based on the input.
-    Sprites can be added and destroyed based on input about each dsitrict.
+    Sprites can be added and destroyed based on input about each district.
+    To destroy a sprite, change the district number to 0.
     The list of the changes is described here: {all_new_additions}.
     Return the updated game state as a well-structured JSON object.
     """
