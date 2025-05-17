@@ -106,13 +106,13 @@ def make_new_game_state(game_state, all_new_additions):
 
     # Prepare the input for the model
     preamble = f"""
-    You are provided with a JSON object representing the current state of a game city, which contains detailed information about each district,
-    including its current population, average house cost, public support, and physical structures.
+    You are provided with a JSON object representing the current state of a game city, which contains detailed information about each sprite,
+    telling which district they are in.
     This is the current game state: {game_state}.
-    You are also provided with a list of new sprite additions that should be incorporated into the existing game state.
+    You are also provided with a list of changes that should be incorporated into the existing game state.
     These sprites should be correctly assigned to their respective districts and should reflect tangible,
     visual changes to the city's physical environment. 
-    that each sprite is correctly matched to its respective district based on the district numbers provided.
+    Make sure that each sprite is correctly matched to its respective district based on the district numbers provided.
     When incorporating these sprites, maintain the original structure of the JSON object and do not add any unexpected fields.
     Ensure the updated game state accurately captures the impact of these additions while preserving all existing information.
     The AI model should also be able to make rational and logical decisions based on the input.
@@ -146,4 +146,4 @@ if __name__ == "__main__":
  'house': ['1', '1', '2'],
  'park': ['3', '3', '3', '2', '4'],
  'subway': ['4']}
-        , "Bomb district 1")
+        , "Build a stadium in district 1 and 2")
