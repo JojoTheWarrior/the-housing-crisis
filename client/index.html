@@ -4,9 +4,61 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>The Housing Crisis</title>
+		<link rel="stylesheet" href="./index.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		
 		<script src="./js/p5.min.js"></script>
 	</head>
 	<body>
-		<script src="./js/graphics.js"></script>
+
+		<div id="landingPage">
+			<h1>The Housing Crisis</h1> <!--insert logo or smth here after-->
+			<button id="play">play</button>
+		</div>
+
+		<div id="infoPage">
+			<p>Welcome, Mayor.</p>
+			<p>Your city waits.</p>
+			<p>Each year, you have the power to reshape its future—one decision at a time. Expand transit, raise skylines, rezone districts, or promise the impossible. You tell the AI what you want done. The system carries it out. One command equals one year. One round closer to the next election.</p>
+			<p>But power comes with pressure.</p>
+			<p>Your approval rating must stay above 50%. Drop below that, and you're out. People don’t all want the same thing. Rising housing prices may please developers but push out long-time residents. Subsidies might win hearts—or bankrupt trust.</p>
+			<p>Every action ripples. Every district remembers.</p>
+			<p>Lead wisely. Or get replaced.</p>
+			<p>Good luck</p>
+			
+			<button id="next"><i class="fa fa-arrow-right"></i></button>
+		</div>
+
+		<div id="gamePage">
+			<div class="stats">
+				<div class="user-support">
+					<p>Public Support</p> <!--fix text later-->
+
+					<div class="public-support">
+						<div class="support"></div>
+					</div>
+				</div>
+
+				<p id="submittedPrompt">no prompt</p>
+
+				<div class="average-cost">
+					<p>Average Home Cost</p> <!--fix text later-->
+					<p id="cost"></p>
+				</div>
+
+			</div>
+
+			<div class="prompt">
+				<div class="input-wrapper">
+					<input type="text" id="textPrompt" placeholder="Type your idea here">
+					<button type="submit" id="submission" value="submit"><i class="fa fa-send-o"></i></button>
+				</div>
+			</div>
+
+			<button id="instructions"><i class="fa fa-question"></i></button>
+		</div>
+
+		<script src="./js/index.js"></script>
+		<!--<script src="./js/graphics.js"></script>-->
 	</body>
 </html>
