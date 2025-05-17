@@ -58,10 +58,9 @@ def simulate_turn():
 @cross_origin()
 def send_district_coords():
     DISTRICT_TO_COORDS = json.loads(request.get_data(as_text=True))
-    print(data)
     # STATE['districts'] = data
 
-    for k,v in data.items():
+    for k,v in DISTRICT_TO_COORDS.items():
         STATE['districts'][k] = {
             "avg_house_price": randint(1_000_000, 2_000_000),
             "public_support": randint(1,100) / 100,
@@ -72,26 +71,26 @@ def send_district_coords():
     # initialize default state of the world
     sprites = {
         "house": [
-            choice(data['0']),
-            choice(data['0']),
-            choice(data['1'])
+            choice(DISTRICT_TO_COORDS['0']),
+            choice(DISTRICT_TO_COORDS['0']),
+            choice(DISTRICT_TO_COORDS['1'])
         ],
         "apartment": [
-            choice(data['0']),
-            choice(data['0']),
-            choice(data['3']),
-            choice(data['3']),
-            choice(data['3'])
+            choice(DISTRICT_TO_COORDS['0']),
+            choice(DISTRICT_TO_COORDS['0']),
+            choice(DISTRICT_TO_COORDS['3']),
+            choice(DISTRICT_TO_COORDS['3']),
+            choice(DISTRICT_TO_COORDS['3'])
         ],
         "park": [
-            choice(data['2']),
-            choice(data['2']),
-            choice(data['2']),
-            choice(data['1']),
-            choice(data['3'])
+            choice(DISTRICT_TO_COORDS['2']),
+            choice(DISTRICT_TO_COORDS['2']),
+            choice(DISTRICT_TO_COORDS['2']),
+            choice(DISTRICT_TO_COORDS['1']),
+            choice(DISTRICT_TO_COORDS['3'])
         ],
         "subway": [
-            choice(data['3'])
+            choice(DISTRICT_TO_COORDS['3'])
         ]
     }
 
