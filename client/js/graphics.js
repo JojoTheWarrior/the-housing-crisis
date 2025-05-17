@@ -17,6 +17,7 @@ const MOUSE = {
 	prev_y: 0,
 }
 var cells = [];
+var district_cells = {};
 const APOTHEM_X = CELL_LENGTH * Math.sqrt(2);
 const APOTHEM_Y = CELL_LENGTH * Math.sin(PERSPECTIVE_ANGLE * Math.PI / 180);
 
@@ -27,15 +28,20 @@ class Cell {
 	constructor(x, y, z_offset, district, colour) {
 		this.x = x;
 		this.y = y;
-		this.z_offset = z_offset;
+		this.z_offset = 0;
+		this.animation = district * 700;
 		this.district = district;
 		this.colour = colour;
 		this.sprite = null;
 	}
 
 	draw() {
+		this.z_offset = 7 * Math.sin(2 * ((Date.now() - this.animation) / 1000));
+		if (this.district <= 0)
+			this.z_offset -= 15;
+
 		let x = ORIGIN.x - (APOTHEM_X * this.x) + (APOTHEM_X * this.y)
-		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset
+		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset;
 		let depth = CELL_DEPTH;
 		if (this.x == MAP_LENGTH || this.y == MAP_LENGTH)
 			depth = CELL_LENGTH * 2;
@@ -92,6 +98,43 @@ class Cell {
 			image(this.sprite, x - APOTHEM_X, y - 20);
 		}
 	}
+
+	check_hover() {
+		if (this.district <= 0)
+			return;
+
+		let x = ORIGIN.x - (APOTHEM_X * this.x) + (APOTHEM_X * this.y)
+		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset
+		if (point_in_rhombus(mouseX, mouseY, x, y, APOTHEM_X, APOTHEM_Y)) {
+			
+			for (let cell of cells) {
+				if (district_cells[this.district].includes(cell)) {
+					cell.is_hovered = true;
+				} else {
+					cell.is_hovered = false;
+				}
+				
+			}
+
+
+			return true;
+		}
+		return false;
+	}
+}
+
+
+function point_in_rhombus(x, y, ax, ay, verticalDist, horizontalDist) {
+    // Center coordinates
+    let cx = ax;
+    let cy = ay + verticalDist;
+
+    // Compute dx and dy from center
+    let dx = Math.abs(x - cx);
+    let dy = Math.abs(y - cy);
+
+    // Check if point is within rhombus using Manhattan-style condition
+    return (dx / horizontalDist + dy / verticalDist) <= 1;
 }
 
 
@@ -125,7 +168,6 @@ function mouseDragged() {
 	MOUSE.prev_x = mouseX;
 	MOUSE.prev_y = mouseY;
 }
-
 
 function perlin(x, y) {
 	return noise(x / OCTAVE, (y + 10000) / OCTAVE)
@@ -171,13 +213,21 @@ function generate_districts() {
 				}
 			}
 			//console.log(perlin(origin_points[min_index][, origin_points[min_index]));
-			cells.push(new Cell(
+			if (min_index + 1 == 0)
+				continue;
+
+			let new_cell = new Cell(
 				x,
 				y,
 				(perlin(origin_points[min_index][0], origin_points[min_index][1])) * PERLIN_AMPLIFICATION,
 				min_index + 1,
 				colours[min_index]
-			));
+			);
+			cells.push(new_cell);
+			if (Object.keys(district_cells).includes((min_index + 1).toString()))
+				district_cells[min_index + 1].push(new_cell);
+			else
+				district_cells[min_index + 1] = [new_cell];
 		}
 	}
 }
@@ -232,8 +282,11 @@ function setup() {
 function draw() {
 	background(240,240,240);
 
+	let checked = false;
 	for (let cell of cells) {
 		cell.draw();
+		if (!checked && cell.check_hover())
+			checked = true;
 	}
 
 	// noStroke();
