@@ -190,6 +190,37 @@ def send_prompt():
 
     return {'status': 'ok'}
 
+city_avg_house_price = 0
+city_public_support = 0
+
+@app.route('/process-prompt', methods=['POST'])
+def process_prompt():
+    data = request.json()
+    input_string = data.get("input_string", "")
+
+    # Calculate city_avg_house_price
+    total_house_value = 0
+    total_houses = 0
+    for district_id, district in STATE['districts'].items():
+        num_houses = len(STATE['sprites'].get('house', []))
+        total_house_value += district['avg_house_price'] * num_houses
+        total_houses += num_houses
+
+    city_avg_house_price = total_house_value // total_houses if total_houses > 0 else 0
+
+    # Calculate city_public_support (weighted average)
+    total_support = 0
+    total_population = 0
+    for district in STATE['districts'].values():
+        total_support += district['public_support'] * district['population']
+        total_population += district['population']
+
+    city_public_support = total_support / total_population if total_population > 0 else 0
+    city_public_support = round(city_public_support, 2)  # Round to 2 decimal places for clarity
+
+    return jsonify([city_avg_house_price, city_public_support, STATE['sprites']])
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
