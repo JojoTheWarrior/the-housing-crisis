@@ -20,7 +20,7 @@ var cells = [];
 const APOTHEM_X = CELL_LENGTH * Math.sqrt(2);
 const APOTHEM_Y = CELL_LENGTH * Math.sin(PERSPECTIVE_ANGLE * Math.PI / 180);
 
-var images = [];
+var images = {};
 var fade_out = 0
 
 class Cell {
@@ -228,10 +228,7 @@ function setup() {
 	generate_districts();
 	send_district_coords();
 
-	images.push(loadImage('data:image/png;base64,PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ZW4+Cjx0aXRsZT40MTUgVW5zdXBwb3J0ZWQgTWVkaWEgVHlwZTwvdGl0bGU+CjxoMT5VbnN1cHBvcnRlZCBNZWRpYSBUeXBlPC9oMT4KPHA+RGlkIG5vdCBhdHRlbXB0IHRvIGxvYWQgSlNPTiBkYXRhIGJlY2F1c2UgdGhlIHJlcXVlc3QgQ29udGVudC1UeXBlIHdhcyBub3QgJiMzOTthcHBsaWNhdGlvbi9qc29uJiMzOTsuPC9wPgo='));
-	images.push(loadImage('../../temple.png'));
-	images.push(loadImage('../../tall temple.png'));
-
+	images["temple"] = loadImage('../../temple.png')
 
 	cells[0].sprite = images[1];
 	for (let x = 0; x <= MAP_LENGTH*MAP_LENGTH; x++) {
