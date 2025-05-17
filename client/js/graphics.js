@@ -21,7 +21,7 @@ const APOTHEM_X = CELL_LENGTH * Math.sqrt(2);
 const APOTHEM_Y = CELL_LENGTH * Math.sin(PERSPECTIVE_ANGLE * Math.PI / 180);
 
 var images = [];
-
+var fade_out = 0
 
 class Cell {
 	constructor(x, y, z_offset, district, colour) {
@@ -116,6 +116,7 @@ function highlight(colour, factor) {
 function mousePressed() {
 	MOUSE.prev_x = mouseX;
 	MOUSE.prev_y = mouseY;
+	year_passes();
 }
 
 function mouseDragged() {
@@ -182,6 +183,10 @@ function generate_districts() {
 	}
 }
 
+function year_passes() {
+	fade_out = 255
+}
+
 function send_district_coords() {
 	let send_data = {};
 
@@ -223,9 +228,15 @@ function setup() {
 	generate_districts();
 	send_district_coords();
 
-	//images.push(loadImage('data:image/png;base64,PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ZW4+Cjx0aXRsZT40MTUgVW5zdXBwb3J0ZWQgTWVkaWEgVHlwZTwvdGl0bGU+CjxoMT5VbnN1cHBvcnRlZCBNZWRpYSBUeXBlPC9oMT4KPHA+RGlkIG5vdCBhdHRlbXB0IHRvIGxvYWQgSlNPTiBkYXRhIGJlY2F1c2UgdGhlIHJlcXVlc3QgQ29udGVudC1UeXBlIHdhcyBub3QgJiMzOTthcHBsaWNhdGlvbi9qc29uJiMzOTsuPC9wPgo='));
-	//cells[0].sprite = images[0];
-	//cells[0].sprite.resize(50,0);
+	images.push(loadImage('data:image/png;base64,PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ZW4+Cjx0aXRsZT40MTUgVW5zdXBwb3J0ZWQgTWVkaWEgVHlwZTwvdGl0bGU+CjxoMT5VbnN1cHBvcnRlZCBNZWRpYSBUeXBlPC9oMT4KPHA+RGlkIG5vdCBhdHRlbXB0IHRvIGxvYWQgSlNPTiBkYXRhIGJlY2F1c2UgdGhlIHJlcXVlc3QgQ29udGVudC1UeXBlIHdhcyBub3QgJiMzOTthcHBsaWNhdGlvbi9qc29uJiMzOTsuPC9wPgo='));
+	images.push(loadImage('../../temple.png'));
+	images.push(loadImage('../../tall temple.png'));
+
+
+	cells[0].sprite = images[1];
+	for (let x = 0; x <= MAP_LENGTH*MAP_LENGTH; x++) {
+		cells[x].sprite = images[x % images.length]
+	}
 }
 
 
@@ -246,4 +257,8 @@ function draw() {
 	//         color(240)
 	//     ] // Array of p5.color objects or arrays containing [p5.color Object, Color Stop (0 to 1)]
 	// });
+	noStroke();
+	fill(0, 0, 0, fade_out);
+	rect(0, 0, width, height)
+	fade_out = max(fade_out-5, 0);
 }
