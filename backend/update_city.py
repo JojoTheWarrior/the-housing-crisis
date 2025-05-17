@@ -12,7 +12,7 @@ class District(BaseModel):
 class CityStates(BaseModel):
     districts: dict[str, District]
 
-def update_city(prompt, city_states):
+def call_gemini(prompt, city_states):
     """
     prompt is a string that is given by the user
     city_states is a json object that contains the informatino about every district in the city
@@ -38,7 +38,10 @@ def update_city(prompt, city_states):
     #Initialize the Gemini client
     client = genai.Client(api_key="YOUR_GOOGLE_API_KEY")
     
-    # Perform the API call with a structured JSON response schema
+    city_states = update_city(prompt, city_states, client)
+    # Get images here
+    
+def update_city(prompt, city_states, client):
     try:
         response = client.models.generate_content(
             model="gemini-2.o-flash",
@@ -49,7 +52,6 @@ def update_city(prompt, city_states):
             },
         )
 
-        # Use the response as instantiated objects
         updated_city_states: CityStates = response.parsed[0]
         return updated_city_states.dict()
     except Exception as e:
