@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&family=Micro+5');
+
 html, body {
     background-color: #a7c4f2;
     height: 100%;
@@ -30,6 +32,43 @@ html, body {
 
 #infoPage {
     display: none; 
+    position: relative;
+    text-align: center;
+}
+
+#scroll {
+    height: 100vh;
+}
+
+#infoPage h1{
+    font-family: "Jersey 15";
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#infoPage p{
+    font-family: "Micro 5";
+    font-size: 22px;
+    padding: 0 210px;
+    position: absolute;
+    top: 390px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#next {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    background-color: #14368c;
+    color: white;
+    border-radius: 50px;
+    font-size: 15px;
+    position: absolute;
+    bottom: 100px;
+    left: 49%;
 }
 
 #gamePage {
