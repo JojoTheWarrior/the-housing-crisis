@@ -44,7 +44,6 @@ city_states ={
     }
 }
 
-
 prompt = "The population in District 2 has doubled due to recent economic growth. Update the city state accordingly." \
 "Build a new community center in District 3 to encourage local engagement and strengthen community ties." 
 
