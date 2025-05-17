@@ -15,9 +15,7 @@ client = genai.Client(api_key=api_key)
 
 response = client.models.generate_content(
     model="gemini-2.0-flash",
-    contents=f"{preamble} " \ 
-    "the current game state is: initial state."
-    "the c"
+    contents=f"{preamble} the current game state is: initial state."
 )
 
 print(response.text)
