@@ -4,50 +4,6 @@ from dotenv import load_dotenv
 import os
 import json
 
-<<<<<<< Updated upstream
-city_states ={
-    "districts": {
-        "district_1": {
-            "number": 1,
-            "population": 1000,
-            "avg_house_cost": 200000,
-            "public_support": 0.8,
-            "new_additions": ""
-        },
-        "district_2": {
-            "number": 2,
-            "population": 3000,
-            "avg_house_cost": 300000,
-            "public_support": 0.7,
-            "new_additions": ""
-        },
-        "district_3": {
-            "number": 3,
-            "population": 500,
-            "avg_house_cost": 150000,
-            "public_support": 0.9,
-            "new_additions": ""
-        },
-        "district_4": {
-            "number": 4,
-            "population": 2000,
-            "avg_house_cost": 250000,
-            "public_support": 0.6,
-            "new_additions": ""
-        },
-        "district_5": {
-            "number": 5,
-            "population": 4000,
-            "avg_house_cost": 350000,
-            "public_support": 0.5,
-            "new_additions": ""
-        }
-    }
-}
-
-prompt = "The population in District 2 has doubled due to recent economic growth. Update the city state accordingly." \
-"Build a new community center in District 3 to encourage local engagement and strengthen community ties." 
-=======
 # city_states ={
 #     "districts": {
 #         "district_1": {
@@ -91,7 +47,6 @@ prompt = "The population in District 2 has doubled due to recent economic growth
 
 # prompt = "The population in District 2 has doubled due to recent economic growth. Update the city state accordingly." \
 # "Build a new community center in District 3 to encourage local engagement and strengthen community ties." 
->>>>>>> Stashed changes
 
 class District(BaseModel):
     number: int
