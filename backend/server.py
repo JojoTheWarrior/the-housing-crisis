@@ -1,7 +1,20 @@
 from flask import Flask, request, jsonify
 import gemini_handler
+import make_building
 
 app = Flask(__name__)
+
+@app.route("/generate_building", methods=["POST"])
+def get_image():
+    data = request.get_json()
+    building_type = data.get("building_type")
+
+    image_path = make_building.generate_building_image(building_type)
+
+    return jsonify({
+        "image_path": image_path
+    })
+
 
 @app.route("/simulate", methods=["POST"])
 def simulate_turn():
