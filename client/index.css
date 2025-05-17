@@ -173,3 +173,54 @@ button[type="submit"]:hover {
     right: 0;
     margin: 15px;
 }
+
+#loadingPage {
+    display: none;
+}
+
+#loadingPage h1 {
+    font-family: "Jersey 15";
+    text-align: center;
+}
+
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingImg {
+    width: 150px;
+    opacity: 0;
+    animation: popUp 4s infinite;
+}
+
+#load1 {
+  animation: popImg1 4s infinite;
+}
+
+@keyframes popImg1 {
+  0%, 10%   { opacity: 0; transform: scale(0.8); }
+  12%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+#load2 {
+  animation: popImg2 4s infinite;
+}
+
+@keyframes popImg2 {
+  0%, 22%   { opacity: 0; transform: scale(0.8); }
+  24%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+#load3 {
+  animation: popImg3 4s infinite;
+}
+
+@keyframes popImg3 {
+  0%, 34%   { opacity: 0; transform: scale(0.8); }
+  36%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
+}
