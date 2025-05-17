@@ -33,11 +33,21 @@ def get_image():
 
     image_bytes = make_building.generate_building_image(building_type)
     base64_str = base64.b64encode(image_bytes).decode('utf-8')
+    image_io = io.BytesIO(image_bytes)
+    image_io.seek(0)
 
+    return send_file(
+        image_io,
+        mimetype='image/png',
+        as_attachment=False,
+        download_name='building.png'  # optional
+    )
+    """
     return jsonify({
         "building_type": building_type,
         "image_base64": base64_str
     })
+    """
 
 
 @app.route("/simulate", methods=["POST"])
