@@ -6,6 +6,7 @@ from PIL import Image
 from PIL import ImageFile
 import pyperclip
 from io import BytesIO
+import io
 import base64
 import PIL.Image
 
@@ -39,7 +40,12 @@ def generate_building_image(building_type):
                     with open(f"./pre_{building_type}.png", "wb") as f:
                         f.write(image_bytes)
                     remove_background(f"./pre_{building_type}.png", f"./{building_type}.png")
-                    return "./{building_type}.png"
+                    
+                    image = Image.open(f"./{building_type}.png").convert("RGBA")
+                    img_byte_arr = io.BytesIO()
+                    image.save(img_byte_arr, format='PNG')
+                    img_byte_arr.seek(0)
+                    return img_byte_arr.read()
                 except Exception as e:
                     print("failed to decode image")
 

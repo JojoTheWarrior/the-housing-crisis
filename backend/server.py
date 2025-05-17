@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import gemini_handler
 import make_building
+import io
+import base64
 
 app = Flask(__name__)
 
@@ -9,10 +11,12 @@ def get_image():
     data = request.get_json()
     building_type = data.get("building_type")
 
-    image_path = make_building.generate_building_image(building_type)
+    image_bytes = make_building.generate_building_image(building_type)
+    base64_str = base64.b64encode(image_bytes).decode('utf-8')
 
     return jsonify({
-        "image_path": image_path
+        "building_type": building_type,
+        "image_base64": base64_str
     })
 
 
