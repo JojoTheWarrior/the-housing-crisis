@@ -22,8 +22,10 @@ html, body {
     padding: 10px;
     background-color: #14368c;
     color: white;
+    border: none;
     border-radius: 10px;
     font-size: 25px;
+    font-family: "Jersey 15";
 }
 
 #play:hover {
@@ -64,11 +66,16 @@ html, body {
     padding: 5px;
     background-color: #14368c;
     color: white;
+    border: none;
     border-radius: 50px;
     font-size: 15px;
     position: absolute;
     bottom: 100px;
     left: 49%;
+}
+
+#next:hover {
+  background-color: #041e5c;
 }
 
 #gamePage {
@@ -84,6 +91,21 @@ html, body {
 
 }
 
+.stats h1 {
+    font-family: "Jersey 15";
+    font-size: 20px;
+}
+
+#avghc {
+    margin-bottom: 0;
+}
+
+.stats p{
+    font-family: "Micro 5";
+    margin-top: 0;
+    font-size: 40px;
+}
+
 .public-support {
     background-color: #c9c9c9;
     border-radius: 20px;
@@ -96,8 +118,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: repeating-linear-gradient(to left, #155419, #74bf6d, #edc54e);
-    box-shadow: 0 5px 5px -6px #edc54e, 0 3px 7px, #74bf6d;
+    background-image: repeating-linear-gradient(to left, #22eb52, #b7842b, #f83262);
+    box-shadow: 0 5px 5px -6px #f83262, 0 3px 7px, #b7842b;
     border-radius: 20px;
     color: #fff;
     height: 100%;
@@ -123,11 +145,6 @@ html, body {
     position: relative;
     width: 100%;
 }
-
-/* .promptElement {
-    display: inline-block;
-    vertical-align: middle;
-} */
 
 input[type="text"], select {
     width: 100%;
@@ -166,10 +183,66 @@ button[type="submit"]:hover {
     padding: 5px;
     background-color: #14368c;
     color: white;
+    border: none;
     border-radius: 50px;
     font-size: 15px;
     position: absolute;
     bottom: 0;
     right: 0;
     margin: 15px;
+}
+
+#instructions:hover {
+  background-color: #041e5c;
+}
+
+#loadingPage {
+    display: none;
+}
+
+#loadingPage h1 {
+    font-family: "Jersey 15";
+    text-align: center;
+}
+
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingImg {
+    width: 150px;
+    opacity: 0;
+    animation: popUp 4s infinite;
+}
+
+#load1 {
+  animation: popImg1 4s infinite;
+}
+
+@keyframes popImg1 {
+  0%, 10%   { opacity: 0; transform: scale(0.8); }
+  12%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+#load2 {
+  animation: popImg2 4s infinite;
+}
+
+@keyframes popImg2 {
+  0%, 22%   { opacity: 0; transform: scale(0.8); }
+  24%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+#load3 {
+  animation: popImg3 4s infinite;
+}
+
+@keyframes popImg3 {
+  0%, 34%   { opacity: 0; transform: scale(0.8); }
+  36%, 60%  { opacity: 1; transform: scale(1); }
+  75%, 100% { opacity: 0; transform: scale(0.9); }
 }

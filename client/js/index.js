@@ -52,4 +52,48 @@ function submitPrompt() {
 
   //testing
   document.getElementById("submittedPrompt").innerText = promptText;
+
+  // Simulate a response from the server
+  async () => {
+    try {
+        const response = await fetch('/process-prompt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input_string: promptText }),
+        });
+        
+        const data = await response.json();
+        console.log("Received Array:", data);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+  }
+
 }
+
+function showLoading() {
+    document.getElementById("gamePage").style.display = "none";
+    document.getElementById("landingPage").style.display = "none";
+    document.getElementById("infoPage").style.display = "none";
+    document.getElementById("loadingPage").style.display = "block";
+}    
+
+function hideLoading() {
+    document.getElementById("loadingPage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+}
+
+// test loading
+const loadScreen = document.getElementById("loadingScreen");
+let isLoading = false;
+
+loadScreen.addEventListener("click", function () {
+    if (isLoading) {
+        hideLoading();
+    } else {
+        showLoading();
+    }
+    isLoading = !isLoading;
+});

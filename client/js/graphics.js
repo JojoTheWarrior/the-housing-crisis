@@ -22,7 +22,7 @@ const APOTHEM_X = CELL_LENGTH * Math.sqrt(2);
 const APOTHEM_Y = CELL_LENGTH * Math.sin(PERSPECTIVE_ANGLE * Math.PI / 180);
 
 var images = [];
-
+var fade_out = 0
 
 class Cell {
 	constructor(x, y, z_offset, district, colour) {
@@ -159,6 +159,7 @@ function highlight(colour, factor) {
 function mousePressed() {
 	MOUSE.prev_x = mouseX;
 	MOUSE.prev_y = mouseY;
+	year_passes();
 }
 
 function mouseDragged() {
@@ -232,6 +233,10 @@ function generate_districts() {
 	}
 }
 
+function year_passes() {
+	fade_out = 255
+}
+
 function send_district_coords() {
 	let send_data = {};
 
@@ -299,4 +304,8 @@ function draw() {
 	//         color(240)
 	//     ] // Array of p5.color objects or arrays containing [p5.color Object, Color Stop (0 to 1)]
 	// });
+	noStroke();
+	fill(0, 0, 0, fade_out);
+	rect(0, 0, width, height)
+	fade_out = max(fade_out-5, 0);
 }

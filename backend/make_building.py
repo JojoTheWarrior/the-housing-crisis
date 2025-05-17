@@ -22,7 +22,7 @@ client = genai.Client(api_key=api_key)
 def generate_building_image(building_type):
     response = client.models.generate_content(
         model="gemini-2.0-flash-preview-image-generation",
-        contents=f"{preamble}. the building type is: {building_type}. please make the backgroud transparent. avoid using colors with RGB values where R, G, and B >= 195. this is for the background transparency algorithm (so avoid whites and grays).",
+        contents=f"{preamble}. the building type is: {building_type}. please make the backgroud transparent. avoid using colors with RGB values where R, G, and B >= 195. this is for the background transparency algorithm (so avoid whites and grays). keep the width a constant 256 pixels and make sure the long diagonal of the floor takes up that whole width, but you can make the height of the image arbitrarily tall to match the height of the building (i.e. skyscraper v.s. bungalow)",
         config=types.GenerateContentConfig(
         response_modalities=['TEXT', 'IMAGE']
         )
@@ -39,9 +39,9 @@ def generate_building_image(building_type):
                     image_bytes = base64.b64decode(part.inline_data.data)
                     with open(f"./pre_{building_type}.png", "wb") as f:
                         f.write(image_bytes)
-                    # remove_background(f"./pre_{building_type}.png", f"./{building_type}.png")
+                    remove_background(f"./pre_{building_type}.png", f"./{building_type}.png")
                     
-                    image = Image.open(f"./pre_{building_type}.png").convert("RGBA")
+                    image = Image.open(f"./{building_type}.png").convert("RGBA")
                     img_byte_arr = io.BytesIO()
                     image.save(img_byte_arr, format='PNG')
                     img_byte_arr.seek(0)
