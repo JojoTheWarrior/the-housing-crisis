@@ -25,6 +25,10 @@ STATE = {
 
 DISTRICT_TO_COORDS = {}
 
+IMAGES = {
+    "id": "base64"
+}
+
 
 @app.route("/generate_building", methods=["POST"])
 def get_image():
@@ -115,7 +119,7 @@ def send_district_coords():
 @app.route("/send-prompt", methods=["POST"])
 @cross_origin()
 def send_prompt():
-    global STATE
+    global STATE, IMAGES
 
     data = json.loads(request.get_data(as_text=True))
 
@@ -186,7 +190,12 @@ def send_prompt():
 
     # generate images based on new_structures
     for structure in new_structures:
-        pass  # make call to image generating api
+        image_bytes = make_building.generate_building_image(structure)
+        base64_str = base64.b64encode(image_bytes).decode('utf-8')
+        image_io = io.BytesIO(image_bytes)
+        image_io.seek(0)
+
+        IMAGES[structure] = base64_str
 
     return {'status': 'ok'}
 
