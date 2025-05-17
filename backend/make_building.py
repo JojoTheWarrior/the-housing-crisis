@@ -2,9 +2,12 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from PIL import Image
 from PIL import ImageFile
+import pyperclip
 from io import BytesIO
 import base64
+import PIL.Image
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True # config for the image generation
 
@@ -17,7 +20,7 @@ client = genai.Client(api_key=api_key)
 
 response = client.models.generate_content(
     model="gemini-2.0-flash-preview-image-generation",
-    contents=f"{preamble}. the building type is: library",
+    contents=f"{preamble}. the building type is: library. please make the backgroud transparent. only draw the upper story of the building",
     config=types.GenerateContentConfig(
       response_modalities=['TEXT', 'IMAGE']
     )
@@ -31,8 +34,8 @@ for part in response.candidates[0].content.parts:
     # check the mime type
     if mime_type.startswith("image/"):
         try:
-            with open("gemini_raw_output.png", "wb") as f:
-                f.write(part.inline_data.data)
+            image_bytes = base64.b64decode(part.inline_data.data)
+            with open("output.png", "wb") as f:
+                f.write(image_bytes)
         except Exception as e:
            print("failed to decode image")
-    
