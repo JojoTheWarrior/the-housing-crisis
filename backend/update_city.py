@@ -4,50 +4,6 @@ from dotenv import load_dotenv
 import os
 import json
 
-# city_states ={
-#     "districts": {
-#         "district_1": {
-#             "number": 1,
-#             "population": 1000,
-#             "avg house cost": 200000,
-#             "public support": 0.8,
-#             "new_additions": ""
-#         },
-#         "district_2": {
-#             "number": 2,
-#             "population": 3000,
-#             "avg house cost": 300000,
-#             "public support": 0.7,
-#             "new_additions": ""
-#         },
-#         "district_3": {
-#             "number": 3,
-#             "population": 500,
-#             "avg house cost": 150000,
-#             "public support": 0.9,
-#             "new_additions": ""
-#         },
-#         "district_4": {
-#             "number": 4,
-#             "population": 2000,
-#             "avg house cost": 250000,
-#             "public support": 0.6,
-#             "new_additions": ""
-#         },
-#         "district_5": {
-#             "number": 5,
-#             "population": 4000,
-#             "avg house cost": 350000,
-#             "public support": 0.5,
-#             "new_additions": ""
-#         }
-#     }
-# }
-
-
-# prompt = "The population in District 2 has doubled due to recent economic growth. Update the city state accordingly." \
-# "Build a new community center in District 3 to encourage local engagement and strengthen community ties." 
-
 class District(BaseModel):
     number: int
     population: int
@@ -58,6 +14,8 @@ class District(BaseModel):
 class CityStates(BaseModel):
     districts: dict[str, District]
 
+class Sprite(BaseModel):
+    sprite: list[int] = Field(default_factory=list)
 
 def call_gemini(prompt, city_states):
     load_dotenv()
@@ -140,10 +98,34 @@ def get_new_city_states(prompt, city_states, client):
     except Exception as e:
         print(f"\nError updating city data: {e}")
         return city_states
+    
+def make_new_game_state(game_state, all_new_additions):
+    load_dotenv()
+    api_key = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
 
+    # Prepare the input for the model
+    preamble = f"""You are provided with a JSON object representing the current state of a city,\n 
+    {json.dumps(game_state, indent=2)}\n\nAdd the following new sprite additions: {all_new_additions}.\nEnsure each sprite has the correct district numbers.\n"""
 
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=preamble,
+        config={
+            "response_mime_type": "application/json",
+        },
+    )
+
+    # Extract and return the updated game state from the response
+    new_game_state = json.loads(response.contents[0])
+    return new_game_state
+    
+    
 
 
 # Test the function
 if __name__ == "__main__":
-    call_gemini(prompt, city_states)
+    make_new_game_state({'apartment': ['0', '0', '3', '3', '3'],
+ 'house': ['0', '0', '1'],
+ 'park': ['2', '2', '2', '1', '3'],
+ 'subway': ['3']}, "Bomb distract 0")
