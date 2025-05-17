@@ -5,8 +5,9 @@ import make_building
 import io
 import base64
 import json
-from random import choice
+from random import choice, randint
 from pprint import pprint
+from update_city import call_gemini
 
 app = Flask(__name__)
 cors = CORS(app) # allow CORS for all domains on all routes.
@@ -21,6 +22,8 @@ STATE = {
 
     }
 }
+
+DISTRICT_TO_COORDS = {}
 
 
 @app.route("/generate_building", methods=["POST"])
@@ -54,15 +57,16 @@ def simulate_turn():
 @app.route("/send-district-coords", methods=["POST"])
 @cross_origin()
 def send_district_coords():
-    data = json.loads(request.get_data(as_text=True))
+    DISTRICT_TO_COORDS = json.loads(request.get_data(as_text=True))
     print(data)
     # STATE['districts'] = data
 
     for k,v in data.items():
         STATE['districts'][k] = {
-            "avg-house-price": 0,
-            "public-support": 0,
-            "population": 0
+            "avg_house_price": randint(1_000_000, 2_000_000),
+            "public_support": randint(1,100) / 100,
+            "population": randint(50_000, 100_000),
+            "new_additions": ""
         }
 
     # initialize default state of the world
@@ -93,8 +97,23 @@ def send_district_coords():
 
     STATE['sprites'] = sprites
 
+    pprint(STATE)
+    
+    return {"status": "ok"}
+
+
+@app.route("/send-district-coords", methods=["POST"])
+@cross_origin()
+def send_prompt():
+    data = json.loads(request.get_data(as_text=True))
+
+    updated_city_states = call_gemini(data['prompt'], STATES)
+    STATES['districts'] = updated_city_states[0]['districts']
+    all_new_additions = updated_city_states[1]
+
+
     def district_from_coords(coords):
-        for district, coordinates in data.items():
+        for district, coordinates in DISTRICT_TO_COORDS.items():
             if coords in coordinates:
                 return district
         return None
@@ -106,11 +125,9 @@ def send_district_coords():
                 game_state[k].append(district_from_coords(coordinate))
             else:
                 game_state[k] = [district_from_coords(coordinate)]
-    
-    pprint(STATE)
-    pprint(game_state)
 
-    return {"status": "ok"}
+    # we now have game_stae and all_new_additions
+    # which are the two prerequisites for the main step
 
 
 if __name__ == "__main__":
