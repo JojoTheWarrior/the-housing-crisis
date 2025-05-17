@@ -25,6 +25,10 @@ STATE = {
 
 DISTRICT_TO_COORDS = {}
 
+IMAGES = {
+    "id": "base64"
+}
+
 
 @app.route("/generate_building", methods=["POST"])
 def get_image():
