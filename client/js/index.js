@@ -8,6 +8,11 @@ let approvalValue = 80;
 let maxApprovalValue = 100;
 let houseCost = 20000; //change as necessary
 
+let city_avg_house_price;
+let city_public_support;
+let game_state;
+let images;
+
 userPlay.addEventListener("click", function(){
     document.getElementById("landingPage").style.display = "none";
     document.getElementById("infoPage").style.display = "block";
@@ -67,6 +72,12 @@ function submitPrompt() {
         });
         
         const data = await response.json();
+
+        city_avg_house_price = data[0];
+        city_public_support = data[1];
+        game_state = data[2];
+        images = data[3];
+
         console.log("Received Array:", data);
     } catch (error) {
         console.error("Error:", error);

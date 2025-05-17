@@ -227,7 +227,7 @@ def process_prompt():
     city_public_support = total_support / total_population if total_population > 0 else 0
     city_public_support = round(city_public_support, 2)  # Round to 2 decimal places for clarity
 
-    return jsonify([city_avg_house_price, city_public_support, STATE['sprites']])
+    return jsonify([city_avg_house_price, city_public_support, STATE['sprites'], IMAGES])
 
 
 
