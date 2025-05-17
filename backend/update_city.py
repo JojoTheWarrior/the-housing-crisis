@@ -60,10 +60,6 @@ class CityStates(BaseModel):
 
 
 def call_gemini(prompt, city_states):
-    """
-    Take the information in the city_states json file and prompt from the user to
-    perform a gemini api call to calculate the new average house cost and the level of public support.
-    """
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
 
@@ -73,6 +69,15 @@ def call_gemini(prompt, city_states):
     updated_city_states = get_new_city_states(prompt, city_states, client)
     print(updated_city_states)
 
+    # Extract all the new additions into a single string
+    all_new_additions = ". ".join([
+        f"District {district['number']}: {district['new_additions']}"
+        for district in updated_city_states.get("districts", {}).values()
+        if district.get("new_additions")
+    ])
+
+    print("\nAll New Additions:")
+    print(all_new_additions)
 
 
     return updated_city_states
