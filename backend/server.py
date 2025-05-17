@@ -115,6 +115,8 @@ def send_district_coords():
 @app.route("/send-prompt", methods=["POST"])
 @cross_origin()
 def send_prompt():
+    global STATE
+
     data = json.loads(request.get_data(as_text=True))
 
     updated_city_states = call_gemini(data['prompt'], STATE)
@@ -127,6 +129,13 @@ def send_prompt():
             if coords in coordinates:
                 return district
         return None
+
+    def generate_coordinates(d, taken):
+        available_set = set(DISTRICT_TO_COORDS[d])
+        taken_set = set(taken)
+        leftover = list(available_set.difference(taken_set))
+        return choice(leftover)
+
 
     game_state = {}
     for k,v in STATE['sprites'].items():
@@ -166,15 +175,18 @@ def send_prompt():
 
                 # generate new coordinates
                 else:
-                    pass
+                    new_state[k].append(generate_coordinates(district, STATE['sprites'][k]))
 
                 # no more space in district
                 if len(new_state[k]) >= len(DISTRICT_TO_COORDS[district]):
                     new_state[k].pop()
 
     pprint(new_state)
+    # STATE = new_state
 
     # generate images based on new_structures
+    for structure in new_structures:
+        pass  # make call to image generating api
 
     return {'status': 'ok'}
 
