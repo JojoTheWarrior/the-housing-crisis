@@ -2,8 +2,10 @@ const CELL_LENGTH = 25;  // sidelength of cell in pixels
 const MAP_LENGTH = 25;
 const NUM_DISTRICTS = 10;
 const PERSPECTIVE_ANGLE = 60;
-const OCTAVE = 30;
+const OCTAVE = 25;
 const WATER_THRESHOLD = 0.35;
+const CELL_DEPTH = 40;
+const PERLIN_AMPLIFICATION = 70;
 
 
 const ORIGIN = {
@@ -15,34 +17,87 @@ const MOUSE = {
 	prev_y: 0,
 }
 var cells = [];
+const APOTHEM_X = CELL_LENGTH * Math.sqrt(2);
+const APOTHEM_Y = CELL_LENGTH * Math.sin(PERSPECTIVE_ANGLE * Math.PI / 180);
 
 
 class Cell {
-	constructor(x, y, colour) {
+	constructor(x, y, z_offset, colour) {
 		this.x = x;
 		this.y = y;
+		this.z_offset = z_offset;
 		this.colour = colour;
 		this.sprite = null;
-
-		this.apothem_x = CELL_LENGTH * sqrt(2);
-		this.apothem_y = CELL_LENGTH * sin(radians(PERSPECTIVE_ANGLE));
 	}
 
 	draw() {
-		let x = ORIGIN.x - (this.apothem_x * this.x) + (this.apothem_x * this.y)
-		let y = ORIGIN.y + (this.apothem_y * this.x) + (this.apothem_y * this.y)
+		let x = ORIGIN.x - (APOTHEM_X * this.x) + (APOTHEM_X * this.y)
+		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset
+		let depth = CELL_DEPTH;
+		if (this.x == MAP_LENGTH || this.y == MAP_LENGTH)
+			depth = CELL_LENGTH * 2;
+
+		// TOP
 
 		fill(...this.colour);
 		stroke(...this.colour);
 		beginShape();
 
 		vertex(x, y);
-		vertex(x - this.apothem_x, y + this.apothem_y);
-		vertex(x, y + 2 * this.apothem_y);
-		vertex(x + this.apothem_x, y + this.apothem_y);
+		vertex(x - APOTHEM_X, y + APOTHEM_Y);
+		vertex(x, y + 2 * APOTHEM_Y);
+		vertex(x + APOTHEM_X, y + APOTHEM_Y);
+
+		endShape(CLOSE);
+
+		// LEFT
+
+		fill(...highlight(this.colour, 10));
+		//stroke(...highlight(this.colour, 10));
+		noStroke();
+
+		beginShape();
+
+		vertex(x - APOTHEM_X, y + APOTHEM_Y);
+		vertex(x - APOTHEM_X, y + APOTHEM_Y + depth);
+		vertex(x, y + 2 * APOTHEM_Y + depth);
+		vertex(x, y + 2 * APOTHEM_Y);
+
+		endShape(CLOSE);
+
+		// RIGHT
+
+		fill(...highlight(this.colour, -10));
+		//stroke(...highlight(this.colour, -10));
+		noStroke();
+
+		beginShape();
+
+		vertex(x, y + 2 * APOTHEM_Y);
+		vertex(x, y + 2 * APOTHEM_Y + depth);
+		vertex(x + APOTHEM_X, y + APOTHEM_Y + depth);
+		vertex(x + APOTHEM_X, y + APOTHEM_Y);
 
 		endShape(CLOSE);
 	}
+}
+
+
+function highlight(colour, factor) {
+	let return_colour = [];
+
+	for (let i of colour) {
+		let i2 = i + factor;
+
+		if (i2 > 255)
+			i2 = 255;
+		else if (i2 < 0)
+			i2 = 0;
+
+		return_colour.push(i2);
+	}
+
+	return return_colour;
 }
 
 
@@ -84,7 +139,7 @@ function generate_districts() {
 		for (let y = 0; y <= MAP_LENGTH; y++) {
 
 			if (perlin(x, y) < WATER_THRESHOLD) {
-				cells.push(new Cell(x, y, [83, 104, 176]));
+				cells.push(new Cell(x, y, (WATER_THRESHOLD * PERLIN_AMPLIFICATION) - 5, [83, 104, 176]));
 				continue;
 			}
 
@@ -103,8 +158,13 @@ function generate_districts() {
 					min_index = i;
 				}
 			}
-
-			cells.push(new Cell(x, y, colours[min_index]));
+			//console.log(perlin(origin_points[min_index][, origin_points[min_index]));
+			cells.push(new Cell(
+				x,
+				y,
+				(perlin(origin_points[min_index][0], origin_points[min_index][1])) * PERLIN_AMPLIFICATION,
+				colours[min_index]
+			));
 		}
 	}
 }
@@ -127,4 +187,15 @@ function draw() {
 	for (let cell of cells) {
 		cell.draw();
 	}
+
+	noStroke();
+	fillGradient('linear', {
+	    from : [ORIGIN.x, ORIGIN.y],   // x, y : Coordinates
+	    to : [ORIGIN.x - (MAP_LENGTH * APOTHEM_X), ORIGIN.y + (2 * MAP_LENGTH * APOTHEM_Y)], // x, y : Coordinates
+	    steps : [
+	        color(240,240,240,0),
+	        color(240,240,240,0),
+	        color(240)
+	    ] // Array of p5.color objects or arrays containing [p5.color Object, Color Stop (0 to 1)]
+	});
 }
