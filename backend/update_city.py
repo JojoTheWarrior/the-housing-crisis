@@ -1,8 +1,11 @@
 from pydantic import BaseModel, Field, ConfigDict
 from google import genai
 from dotenv import load_dotenv
+from flask import Flask, request, jsonify
 import os
 import json
+
+
 
 class District(BaseModel):
     number: int
@@ -136,9 +139,6 @@ def make_new_game_state(game_state, all_new_additions):
     print(new_game_state)
     return new_game_state
     
-    
-
-
 # Test the function
 if __name__ == "__main__":
     make_new_game_state(
