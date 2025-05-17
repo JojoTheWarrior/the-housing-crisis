@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, Extra, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict
 from google import genai
 from dotenv import load_dotenv
 import os
@@ -20,7 +20,7 @@ city_states = {
         }
     }
 }
-prompt = "Population rose to 2000 so the demand for avg house cost will increase"
+prompt = "Population for district 1 rose to 2000 so the emand for avg house cost will increase" 
 
 class District(BaseModel):
     name: str
@@ -32,21 +32,12 @@ class District(BaseModel):
 class CityStates(BaseModel):
     districts: dict[str, District]
 
-    model_config = ConfigDict(extra='ignore')
-
 
 def call_gemini(prompt, city_states):
     """
-    prompt is a string that is given by the user
-    city_states is a json object that contains the information about every district in the city
-    
-    Take the information in the city_States json file and prompt from the user to
+    Take the information in the city_states json file and prompt from the user to
     perform a gemini api call to calculate the new average house cost and the level of public support.
-
-    Use the response from the gemini api call to update the city_states json file
-    and return the updated city_states json file
     """
-
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
 
@@ -59,24 +50,40 @@ def call_gemini(prompt, city_states):
     print(updated_city_states)
     return updated_city_states
 
-
 def update_city(prompt, city_states, client):
     try:
-        # Perform the API call with the structured response schema
+        # Perform the API call
         response = client.models.generate_content(
-            model="gemini-2.o-flash",
-            contents=f"{prompt}. Send a new updated json formated data to replace the city_states json data over here: f{json.dumps(city_states)}",
+            model="gemini-2.0-flash",
+            contents=f"{prompt}. Send a new updated JSON formatted data to replace the city_states JSON data over here: {json.dumps(city_states)}",
             config={
                 "response_mime_type": "application/json",
-                "response_schema": list[CityStates],
             },
         )
+
+        # Print the raw response for inspection
+        print("\nRaw API Response:")
         print(response.text)
 
-        return response
+        # Attempt to parse the response as JSON
+        try:
+            response_json = json.loads(response.text)
+            print("\nParsed JSON:")
+            print(json.dumps(response_json, indent=4))
+        except json.JSONDecodeError as decode_error:
+            print("\nFailed to decode JSON:")
+            print(response.text)
+            print(f"Decoding Error: {decode_error}")
+            return city_states
+
+        # Return the raw response for now
+        return response_json
+
     except Exception as e:
-        print(f"Error updating city data: {e}")
+        print(f"\nError updating city data: {e}")
         return city_states
+
+
 
 
 # Test the function
