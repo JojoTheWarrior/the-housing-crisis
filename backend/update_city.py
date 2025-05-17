@@ -2,8 +2,6 @@ from google import genai
 from pydantic import BaseModel
 import json
 
-
-
 class District(BaseModel):
     name: str
     population: int
