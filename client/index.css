@@ -223,10 +223,6 @@ button[type="submit"]:hover {
     align-items: center; 
 }
 
-.loadingContainer {
-
-}
-
 #loadingScreen {
     display: none;
 }
@@ -281,4 +277,11 @@ button[type="submit"]:hover {
   0%, 34%   { opacity: 0; transform: scale(0.8); }
   36%, 60%  { opacity: 1; transform: scale(1); }
   75%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+#gameOverPage {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center; 
 }
