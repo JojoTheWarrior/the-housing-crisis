@@ -59,18 +59,20 @@ def get_new_city_states(prompt, city_states, client):
       If there are no physical, visual, tanlgible changes given through the prompt, keep the 'new_additions' field empty.
       
       For example, appropriate 'new_additions' include phrases like 
-      "Built a new subway station.", "Constructed a new park.", or "Established a new community center."
+      "Add on more subway station.", "Add one more park.", or "Add one more community center."
       Physical changes like these should naturally lead to downstream impacts on the other fields.
       For instance, if a district initially has a 'population' of 1000, 'avg_house_cost' of 200000, and 'public_support' of 0.8,
       then building a new subway station might result in a 'population' increase to 1200,
       a 'avg_house_cost' rise to 250000, and a 'public_support' boost to 0.9,
-      while the 'new_additions' field could simply state "Built a new subway station."
+      while the 'new_additions' field could simply state "Add a new subway station."
       Ensure the returned JSON object accurately captures these inferences without directly describing them in the 'new_additions' field.
       
       Another important note is that when you are calculating the house cost, briefly think of supply and demand.
       A higher population would mean a higher demand, and thus a higher house cost. The same workds vice versa.
       The AI model should also be able to make rational and logical decisions based on the prompt.
       For instance, if the population increases, a new apartment complex should be built to accommodate the new residents.
+
+      Last important note is that nothiing should be added to distrcit 0, if there is something on district 0, it should be removed.
       """
 
 
@@ -140,10 +142,10 @@ def make_new_game_state(game_state, all_new_additions):
     return new_game_state
     
 # Test the function
-if __name__ == "__main__":
-    make_new_game_state(
-        {'apartment': ['1', '1', '4', '4', '4'],
- 'house': ['1', '1', '2'],
- 'park': ['3', '3', '3', '2', '4'],
- 'subway': ['4']}
-        , "Build a stadium in district 1 and 2")
+# if __name__ == "__main__":
+#     make_new_game_state(
+#         {'apartment': ['1', '1', '4', '4', '4'],
+#  'house': ['1', '1', '2'],
+#  'park': ['3', '3', '3', '2', '4'],
+#  'subway': ['4']}
+#         , "Build a stadium in district 1 and 2")
