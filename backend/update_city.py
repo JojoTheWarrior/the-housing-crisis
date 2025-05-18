@@ -124,7 +124,7 @@ def make_new_game_state(game_state, all_new_additions):
     Ensure the updated game state accurately captures the impact of these additions while preserving all existing information.
     The AI model should also be able to make rational and logical decisions based on the input.
     Sprites can be added and destroyed based on input about each district.
-    To destroy a sprite, change the district number to 0.
+    To remove a sprite from a district, within game_state, remove that district's number from the list of the sprite's positions (removing as many times as the number of sprites you want to remove from that district).
     The list of the changes is described here: {all_new_additions}.
     Return the updated game state as a well-structured JSON object.
     """
