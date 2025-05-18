@@ -22,7 +22,7 @@ client = genai.Client(api_key=api_key)
 def generate_building_image(building_type):
     response = client.models.generate_content(
         model="gemini-2.0-flash-preview-image-generation",
-        contents=f"{preamble}. the building type is: {building_type}. please make the background strictly pink (#d81ce6, or (216, 28, 230)). it's very important that the background is that shade of pink. keep the width a constant 256 pixels and make sure the long diagonal of the floor takes up that whole width, but you can make the height of the image arbitrarily tall to match the height of the building (i.e. skyscraper v.s. bungalow)",
+        contents=f"{preamble}. the building type is: {building_type}. please make the background white. keep the width a constant 256 pixels and make sure the long diagonal of the floor takes up that whole width, but you can make the height of the image arbitrarily tall to match the height of the building (i.e. skyscraper v.s. bungalow)",
         config=types.GenerateContentConfig(
         response_modalities=['TEXT', 'IMAGE']
         )
@@ -64,8 +64,8 @@ def remove_background(image_bytes):
         for c in range(width):
             R,G,B,A = pixels[r, c]
             threshold = 40
-            # if 216-threshold <= R and R <= 216+threshold and 28-threshold <= G and G <= 28+threshold and 230-threshold <= B and B <= 230+threshold:
-            if (is_pink(R, G, B)):
+            if R > 190 and G > 190 and B > 190:
+            # if (is_pink(R, G, B)):
                 pixels[r,c] = (0,0,0,0)
     
     output = io.BytesIO()
