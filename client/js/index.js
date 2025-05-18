@@ -3,6 +3,7 @@ const userPrompt = document.getElementById("textPrompt");
 const userPlay = document.getElementById("play");
 const userNext = document.getElementById("next");
 const userQuestion = document.getElementById("instructions");
+const userReplay = document.getElementById("replay");
 
 let approvalValue = 80;
 let maxApprovalValue = 100;
@@ -30,6 +31,12 @@ userQuestion.addEventListener("click", function(){
     document.getElementById("gamePage").style.display = "none";
     document.getElementById("infoPage").style.display = "block";
     // noLoop();
+})
+
+userReplay.addEventListener("click", function(){
+	document.getElementById("landingPage").style.display = "flex";
+	document.getElementById("gameOverPage").style.display = "none";
+
 })
 
 function changeBar(){
@@ -151,6 +158,11 @@ function showLoading() {
 function hideLoading() {
     document.getElementById("loadingPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
+
+	if ((approvalValue / maxApprovalValue) * 100 < 80){
+		document.getElementById("gamePage").style.display = "none";
+		document.getElementById("gameOverPage").style.display = "flex";
+	}
 }
 
 // test loading

@@ -284,4 +284,103 @@ button[type="submit"]:hover {
     height: 100vh;
     justify-content: center;
     align-items: center; 
+    overflow: hidden;
+}
+
+.gameOver {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+}
+
+#gameOverPage1 {
+    animation: slideInRotate 1s ease-out forwards,
+               stayVisible 3s 1s forwards,
+               slideOutRotate 1s 4s forwards;
+}
+
+#gameOverPage2 {
+    animation: slideInRotate 1s 5s ease-out forwards;
+}
+
+#gameOverPage2 h1 {
+    font-family: "Jersey 15"; 
+    position: absolute;
+    padding: 0 180px;
+    top: 140px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#gameOverPage2 p {
+    font-family: "Micro 5";
+    font-size: 20px;
+    padding: 0 210px;
+    position: absolute;
+    top: 370px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#gameOverPage1 p {
+    font-family: "Micro 5";
+    font-size: 40px;
+    margin-top: 0;
+}
+
+#replay {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    background-color: #14368c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    position: absolute;
+    bottom: 15vh;
+    left: 49%;
+}
+
+#replay:hover {
+  background-color: #041e5c;
+}
+
+@keyframes slideInRotate {
+    0% {
+        transform: translateX(-100%) rotate(-15deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRotate {
+    0% {
+        transform: translateX(0) rotate(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) rotate(15deg);
+        opacity: 0;
+    }
+}
+
+@keyframes stayVisible {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
 }
