@@ -431,12 +431,32 @@ function send_district_coords() {
 	    headers: {
 	      'Accept': 'application/json',
 	      'Content-Type': 'application/json',
+	      'Access-Control-Allow-Origin': '*'
 	    },
 	    method: "POST",
-	    mode: 'no-cors',
+	    //mode: 'no-cors',
 	    body: JSON.stringify(send_data)
 	})
-	.then(function(res){ console.log(res) })
+	.then(function(res){
+		let response = res.json()
+		response.then((resp) => {
+			console.log("heyyy");
+			console.log(resp);
+			images = resp.images;
+			sprites = resp.sprites;
+
+			for (const [sprite, coords] of Object.entries(sprites)) {
+				for (let coord of coords) {
+					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+				}
+			}
+
+			document.getElementById("cost").innerText = "$" + resp.avg_house_price.toString();
+			approvalValue = resp.city_public_support * 100;
+			changeBar();
+			//hideLoading();
+		})
+	})
 	.catch(function(res){ console.log(res) });
 }
 

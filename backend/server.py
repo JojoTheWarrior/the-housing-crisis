@@ -118,7 +118,13 @@ def send_district_coords():
 
     STATE['sprites'] = sprites
     
-    return {"status": "ok"}
+    return jsonify({
+        'status': 'ok',
+        'avg_house_price': randint(900_000, 1_400_000),
+        'city_public_support': randint(43, 72) / 100,
+        'images': IMAGES,
+        'sprites': STATE['sprites']
+    })
 
 
 @app.route("/send-prompt", methods=["POST"])
