@@ -114,10 +114,10 @@ loadScreen.addEventListener("click", function () {
 // graphics.js begins
 const CELL_LENGTH = 25;  // sidelength of cell in pixels
 const MAP_LENGTH = 10;
-const NUM_DISTRICTS = 4;
+const NUM_DISTRICTS = 6;
 const PERSPECTIVE_ANGLE = 60;
 const OCTAVE = 25;
-const WATER_THRESHOLD = 0.35;
+const WATER_THRESHOLD = 0.25;
 const CELL_DEPTH = 40;
 const PERLIN_AMPLIFICATION = 70;
 

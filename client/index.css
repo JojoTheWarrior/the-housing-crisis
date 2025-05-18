@@ -60,10 +60,10 @@ html, body {
 
 #infoPage p{
     font-family: "Micro 5";
-    font-size: 22px;
+    font-size: 20px;
     padding: 0 210px;
     position: absolute;
-    top: 390px;
+    top: 370px;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -78,7 +78,7 @@ html, body {
     border-radius: 50px;
     font-size: 15px;
     position: absolute;
-    bottom: 100px;
+    bottom: 15vh;
     left: 49%;
 }
 
@@ -92,11 +92,9 @@ html, body {
 
 .stats {
     z-index: 2;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10%;
-    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
 
 }
 
@@ -106,7 +104,9 @@ html, body {
 }
 
 #avghc {
+    color: black;
     margin-bottom: 0;
+    text-align: center;
 }
 
 .stats p{
@@ -119,27 +119,35 @@ html, body {
     background-color: #c9c9c9;
     border-radius: 20px;
     height: 30px;
-    width: 400px;
+    margin-left: 5vw;
+    margin-right: 5vw;
+/*    width: 100%;*/
     overflow: hidden;
+}
+
+.user-support {
+    text-align: center;
 }
 
 .support{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: repeating-linear-gradient(to left, #22eb52, #b7842b, #f83262);
+    background-image: repeating-linear-gradient(to left, #6672b5, #525fa1);
     box-shadow: 0 5px 5px -6px #f83262, 0 3px 7px, #b7842b;
     border-radius: 20px;
     color: #fff;
     height: 100%;
     width: 0;
     transition: 1s ease 0.3s;
+    font-family: "Jersey 15";
 }
 
 .average-cost {
     position: static;
     right: 0;
-    text-align: right;
+    text-align: center;
+    color: #509045;
 }
 
 .prompt {
@@ -180,6 +188,7 @@ button[type="submit"] {
     padding: 0;
     height: 35px;
     width: 35px;
+    transition-duration: .3s;
 }
 
 button[type="submit"]:hover {
@@ -209,9 +218,18 @@ button[type="submit"]:hover {
     display: none;
 }
 
+#loadingScreen {
+    display: none;
+}
+
 #loadingPage h1 {
     font-family: "Jersey 15";
     text-align: center;
+}
+
+#submittedPrompt {
+    text-align: center;
+    padding: 3vh;
 }
 
 .loader{
