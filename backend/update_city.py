@@ -28,14 +28,15 @@ def call_gemini(prompt, city_states):
     
     # print(city_states)
     updated_city_states = get_new_city_states(prompt, city_states, client)
-    # print(updated_city_states)
-
     # Extract all the new additions into a single string
-    all_new_additions = ". ".join([
-        f"District {number}: {district['new_additions']}"
-        for number, district in updated_city_states.get("districts", {}).items()
-        if district.get("new_additions")
-    ])
+    
+
+    all_new_additions = ""
+    try:
+        for number, district in updated_city_states["districts"].items():
+            all_new_additions += f"District {number}: {district['new_additions']}"
+    except Exception as e:
+        all_new_additions = json.dumps(all_new_additions)
 
     # print("\nAll New Additions:")
     # print(all_new_additions)
@@ -117,6 +118,7 @@ def make_new_game_state(game_state, all_new_additions):
     You are also provided with a list of changes that should be incorporated into the existing game state.
     These sprites should be correctly assigned to their respective districts and should reflect tangible,
     visual changes to the city's physical environment. 
+    You may create new building types that don't exist yet in the game_state (for example, you can add a new building sprite type called "amusement park" or "cemetery").
     Make sure that each sprite is correctly matched to its respective district based on the district numbers provided.
     When incorporating these sprites, maintain the original structure of the JSON object and do not add any unexpected fields.
     Ensure the updated game state accurately captures the impact of these additions while preserving all existing information.
