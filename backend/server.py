@@ -159,7 +159,14 @@ def send_prompt():
             if coord not in taken:
                 leftover.append(coord)
 
+        print(leftover)
         return choice(leftover)
+
+    def get_taken_values():
+        taken_values = []
+        for k,v in STATE['sprites'].items():
+            taken_values += v
+        return taken_values
 
 
     game_state = {}
@@ -185,6 +192,7 @@ def send_prompt():
     print(new_structures)
 
     new_state = {}
+    taken_values = get_taken_values()
 
     pprint(f"new game state is {new_game_state}")
 
@@ -198,7 +206,9 @@ def send_prompt():
 
             if district.isnumeric() and district != '0' and district != 0:
                 if k not in STATE['sprites'].keys():
-                    new_state[k] = [generate_coordinates(district, [])]
+                    gen = generate_coordinates(district, [])
+                    new_state[k] = [gen]
+                    taken_values.append(gen)
 
                 # add existing coordinates
                 elif len(new_state[k]) + 1 <= len(STATE['sprites'][k]):
@@ -206,7 +216,9 @@ def send_prompt():
 
                 # generate new coordinates
                 else:
-                    new_state[k].append(generate_coordinates(district, STATE['sprites'][k]))
+                    gen = generate_coordinates(district, taken_values)
+                    taken_values.append(gen)
+                    new_state[k].append(gen)
 
                 # no more space in district
                 if len(new_state[k]) >= len(DISTRICT_TO_COORDS[district]):
