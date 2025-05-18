@@ -170,7 +170,10 @@ def send_prompt():
 
     original_keys = set(STATE['sprites'].keys())
     new_keys = set(new_game_state.keys())
-    new_structures = list(original_keys.difference(new_keys))
+    new_structures = list(new_keys.difference(original_keys))
+    print(original_keys, new_keys)
+    print(new_structures)
+
 
     new_state = {}
 
@@ -181,8 +184,11 @@ def send_prompt():
             district = new_game_state[k][i]
 
             if district != '0':
+                if k not in STATE['sprites'].keys():
+                    new_state[k] = [generate_coordinates(district, [])]
+
                 # add existing coordinates
-                if len(new_state[k]) + 1 <= len(STATE['sprites'][k]):
+                elif len(new_state[k]) + 1 <= len(STATE['sprites'][k]):
                     new_state[k].append(STATE['sprites'][k][i])
 
                 # generate new coordinates
@@ -229,7 +235,8 @@ def send_prompt():
         'status': 'ok',
         'avg_house_price': city_avg_house_price,
         'city_public_support': city_public_support,
-        'images': IMAGES
+        'images': IMAGES,
+        'sprites': STATE['sprites']
     })
 
 

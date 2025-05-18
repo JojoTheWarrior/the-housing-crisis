@@ -11,7 +11,9 @@ let houseCost = 20000; //change as necessary
 let city_avg_house_price;
 let city_public_support;
 let game_state;
-let images;
+
+var images = [];
+var sprites = {};
 
 userPlay.addEventListener("click", function(){
     document.getElementById("landingPage").style.display = "none";
@@ -81,8 +83,16 @@ function submitPrompt() {
 		response.then((resp) => {
 			console.log("heyyy");
 			console.log(resp);
+			images = resp.images;
+			sprites = resp.sprites;
+
+			for (const [sprite, coords] of Object.entries(sprites)) {
+				for (let coord of coords) {
+					cells[coord[0] + coord[1] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+				}
+			}
+
 			document.getElementById("cost").innerText = "$" + resp.avg_house_price.toString();
-			console.log(resp.images);
 			approvalValue = resp.city_public_support * 100;
 			changeBar();
 			hideLoading();
@@ -443,7 +453,7 @@ function setup() {
 	send_district_coords();
 
 	// images["temple"] = loadImage('../../temple.png');
-	cells[47].sprite = loadImage('../../temple.png');
+	//cells[47].sprite = loadImage('../../temple.png');
 }
 
     
