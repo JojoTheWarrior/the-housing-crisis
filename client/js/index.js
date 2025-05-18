@@ -88,7 +88,7 @@ function submitPrompt() {
 
 			for (const [sprite, coords] of Object.entries(sprites)) {
 				for (let coord of coords) {
-					cells[coord[0] + coord[1] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
 				}
 			}
 
