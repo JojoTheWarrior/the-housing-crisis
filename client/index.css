@@ -214,6 +214,13 @@ button[type="submit"]:hover {
 
 #loadingPage {
     display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center; 
+}
+
+.loadingContainer {
+
 }
 
 #loadingScreen {

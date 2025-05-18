@@ -138,12 +138,12 @@ function showLoading() {
     document.getElementById("gamePage").style.display = "none";
     document.getElementById("landingPage").style.display = "none";
     document.getElementById("infoPage").style.display = "none";
-    document.getElementById("loadingPage").style.display = "block";
+    document.getElementById("loadingPage").style.display = "flex";
 }    
 
 function hideLoading() {
     document.getElementById("loadingPage").style.display = "none";
-    document.getElementById("gamePage").style.display = "block";
+    document.getElementById("gamePage").style.display = "flex";
 }
 
 // test loading
