@@ -58,6 +58,11 @@ def get_new_city_states(prompt, city_states, client):
       Avoid explicitly describing the numeric changes in 'population', 'avg_house_cost', or 'public_support' within the 'new_additions' field, 
       as these values should implicitly reflect the impact of the described physical changes.
       If there are no physical, visual, tanlgible changes given through the prompt, keep the 'new_additions' field empty.
+
+      For the public support feature, you need to be strictly logical.
+      For example, if housing price are going up, the public support should go down.
+      Or if there is too much of a certain type of building, the public support should go down.
+      Overall there should be a larger tendancy that the public support is going down.
       
       For example, appropriate 'new_additions' include phrases like 
       "Add on more subway station.", "Add one more park.", or "Add one more community center."
