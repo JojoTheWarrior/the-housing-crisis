@@ -90,6 +90,10 @@ function submitPrompt() {
 
 			console.log(resp);
 
+			for (let cell of cells) {
+				cell.sprite = null;
+			}
+
 			for (const [sprite, coords] of Object.entries(sprites)) {
 				for (let coord of coords) {
 					cells[coord[1] + coord[0] * (MAP_LENGTH + 1)].sprite = loadImage("data:image/png;base64," + images[sprite]);
