@@ -26,9 +26,9 @@ def call_gemini(prompt, city_states):
 
     client = genai.Client(api_key=api_key)
     
-    print(city_states)
+    # print(city_states)
     updated_city_states = get_new_city_states(prompt, city_states, client)
-    print(updated_city_states)
+    # print(updated_city_states)
 
     # Extract all the new additions into a single string
     all_new_additions = ". ".join([
@@ -37,8 +37,8 @@ def call_gemini(prompt, city_states):
         if district.get("new_additions")
     ])
 
-    print("\nAll New Additions:")
-    print(all_new_additions)
+    # print("\nAll New Additions:")
+    # print(all_new_additions)
 
 
     return updated_city_states, all_new_additions
@@ -134,9 +134,9 @@ def make_new_game_state(game_state, all_new_additions):
     )
 
     # Extract and return the updated game state from the response
-    print(game_state)
+    # print(game_state)
     new_game_state = json.loads(response.text)
-    print(new_game_state)
+    # print(new_game_state)
     return new_game_state
     
 # Test the function

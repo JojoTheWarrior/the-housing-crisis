@@ -135,9 +135,11 @@ def send_prompt():
         return None
 
     def generate_coordinates(d, taken):
-        available_set = set(DISTRICT_TO_COORDS[d])
-        taken_set = set(taken)
-        leftover = list(available_set.difference(taken_set))
+        leftover = []
+        for coord in DISTRICT_TO_COORDS[str(d)]:
+            if coord not in taken:
+                leftover.append(coord)
+
         return choice(leftover)
 
 
@@ -152,12 +154,8 @@ def send_prompt():
     # we now have game_state and all_new_additions
     # which are the two prerequisites for the main step
 
-    print("--- HERE ---")
 
     new_game_state = make_new_game_state(game_state, all_new_additions)
-
-    pprint(new_game_state)
-    pprint(STATE['sprites'])
 
 
     original_keys = set(STATE['sprites'].keys())
@@ -174,7 +172,7 @@ def send_prompt():
 
             if district != '0':
                 # add existing coordinates
-                if len(new_state[k]) + 1 <= len(STATE['sprites'][k][i]):
+                if len(new_state[k]) + 1 <= len(STATE['sprites'][k]):
                     new_state[k].append(STATE['sprites'][k][i])
 
                 # generate new coordinates
@@ -186,7 +184,7 @@ def send_prompt():
                     new_state[k].pop()
 
     pprint(new_state)
-    # STATE = new_state
+    STATE['sprites'] = new_state
 
     # generate images based on new_structures
     for structure in new_structures:

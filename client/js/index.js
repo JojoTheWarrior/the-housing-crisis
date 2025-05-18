@@ -60,29 +60,46 @@ function submitPrompt() {
   //testing
   document.getElementById("submittedPrompt").innerText = promptText;
 
+  fetch("http://127.0.0.1:5000/send-prompt",
+	{
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json',
+	    },
+	    method: "POST",
+	    mode: 'no-cors',
+	    body: JSON.stringify({
+    		"prompt": promptText
+		})
+	})
+	.then(function(res){ console.log(res) })
+	.catch(function(res){ console.log(res) });
+
+
+
   // Simulate a response from the server
-  async () => {
-    try {
-        const response = await fetch('/process-prompt', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ input_string: promptText }),
-        });
+  // async () => {
+  //   try {
+  //       const response = await fetch('/process-prompt', {
+  //           method: 'POST',
+  //           headers: {
+  //               'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify({ input_string: promptText }),
+  //       });
         
-        const data = await response.json();
+  //       const data = await response.json();
 
-        city_avg_house_price = data[0];
-        city_public_support = data[1];
-        game_state = data[2];
-        images = data[3];
+  //       city_avg_house_price = data[0];
+  //       city_public_support = data[1];
+  //       game_state = data[2];
+  //       images = data[3];
 
-        console.log("Received Array:", data);
-    } catch (error) {
-        console.error("Error:", error);
-    }
-  }
+  //       console.log("Received Array:", data);
+  //   } catch (error) {
+  //       console.error("Error:", error);
+  //   }
+  // }
 
 }
 
