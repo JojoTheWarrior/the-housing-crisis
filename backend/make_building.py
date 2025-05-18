@@ -22,7 +22,7 @@ client = genai.Client(api_key=api_key)
 def generate_building_image(building_type):
     response = client.models.generate_content(
         model="gemini-2.0-flash-preview-image-generation",
-        contents=f"{preamble}. the building type is: {building_type}. please make the backgroud transparent. avoid using colors with RGB values where R, G, and B >= 195. this is for the background transparency algorithm (so avoid whites and grays). keep the width a constant 256 pixels and make sure the long diagonal of the floor takes up that whole width, but you can make the height of the image arbitrarily tall to match the height of the building (i.e. skyscraper v.s. bungalow)",
+        contents=f"{preamble}. the building type is: {building_type}. please make the background strictly pink (#d81ce6, or (216, 28, 230)). it's very important that the background is that shade of pink. keep the width a constant 256 pixels and make sure the long diagonal of the floor takes up that whole width, but you can make the height of the image arbitrarily tall to match the height of the building (i.e. skyscraper v.s. bungalow)",
         config=types.GenerateContentConfig(
         response_modalities=['TEXT', 'IMAGE']
         )
@@ -37,15 +37,25 @@ def generate_building_image(building_type):
             if mime_type.startswith("image/"):
                 try:
                     image_bytes = base64.b64decode(part.inline_data.data)
-                    img_byte_arr = io.BytesIO(image_bytes)
-                    img_byte_arr.seek(0)
-                    return img_byte_arr.read()
+                    return remove_background(image_bytes)
                 except Exception as e:
                     print("failed to decode image")
 
 
-def remove_background(image_path, output_path):
-    image = Image.open(image_path).convert("RGBA")
+def is_pink(R, G, B):
+    # Normalize RGB to [0, 1] range (optional if values are already in 0–255)
+    brightness = (R + G + B) / 3
+
+    return (
+        R > 150 and            # Red is high
+        G >= 50 and G <= 180 and  # Green is moderate
+        B >= 100 and B <= 255 and # Blue is moderate-high
+        R > G and R > B and    # Red is dominant
+        brightness > 100       # Not too dark
+    )
+
+def remove_background(image_bytes):
+    image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     pixels = image.load()
 
     width, height = image.size
@@ -53,8 +63,12 @@ def remove_background(image_path, output_path):
     for r in range(height):
         for c in range(width):
             R,G,B,A = pixels[r, c]
-            if R >= 195 and G >= 195 and B >= 195:
+            threshold = 40
+            # if 216-threshold <= R and R <= 216+threshold and 28-threshold <= G and G <= 28+threshold and 230-threshold <= B and B <= 230+threshold:
+            if (is_pink(R, G, B)):
                 pixels[r,c] = (0,0,0,0)
     
-    image.save(output_path)
-    print("saved transparent image")
+    output = io.BytesIO()
+    image.save(output, format="PNG")
+    output.seek(0)
+    return output.read()

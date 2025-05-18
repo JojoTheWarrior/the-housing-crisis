@@ -185,6 +185,7 @@ def send_prompt():
 
     new_game_state = make_new_game_state(game_state, all_new_additions)
 
+    pprint(new_game_state)
 
     original_keys = set(STATE['sprites'].keys())
     new_keys = set(new_game_state.keys())
@@ -192,17 +193,20 @@ def send_prompt():
     print(original_keys, new_keys)
     print(new_structures)
 
-
     new_state = {}
     taken_values = get_taken_values()
 
+    pprint(f"new game state is {new_game_state}")
+
     for k,v in new_game_state.items():
         new_state[k] = []
+        if (k == '0'):
+            continue
 
         for i in range(len(v)):
             district = new_game_state[k][i]
 
-            if district != '0':
+            if district.isnumeric() and district != '0' and district != 0:
                 if k not in STATE['sprites'].keys():
                     gen = generate_coordinates(district, [])
                     new_state[k] = [gen]
