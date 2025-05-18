@@ -278,26 +278,13 @@ class Cell {
 
 	check_hover() {
 		if (this.district <= 0)
-			return;
+			return -1;
 
 		let x = ORIGIN.x - (APOTHEM_X * this.x) + (APOTHEM_X * this.y)
 		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset
-		if (point_in_rhombus(mouseX, mouseY, x, y, APOTHEM_X, APOTHEM_Y)) {
-			
-			for (let cell of cells) {
-				if (district_cells[this.district].includes(cell)) {
-					cell.is_hovered = true;
-				} else {
-					cell.is_hovered = false;
-					cell.peaked = false;
-				}
-				
-			}
-
-
-			return true;
-		}
-		return false;
+		if (point_in_rhombus(mouseX, mouseY, x, y, APOTHEM_X, APOTHEM_Y))
+			return this.district
+		return -1
 	}
 }
 
@@ -308,8 +295,8 @@ function point_in_rhombus(x, y, ax, ay, verticalDist, horizontalDist) {
     let cy = ay + verticalDist;
 
     // Compute dx and dy from center
-    let dx = Math.abs(x - cx);
-    let dy = Math.abs(y - cy);
+    let dx = Math.abs(x - cx) - 5;
+    let dy = Math.abs(y - cy) - 5;
 
     // Check if point is within rhombus using Manhattan-style condition
     return (dx / horizontalDist + dy / verticalDist) <= 1;
@@ -485,12 +472,21 @@ function setup() {
 function draw() {
 	background(240,240,240);
 
-	// let checked = false;
+	let district = -1;
 	for (let cell of cells) {
 		cell.draw();
-		// if (!checked && cell.check_hover())
-		// 	checked = true;
+		let d = cell.check_hover();
+		if (d !== -1)
+			district = d;
 	}
+
+	if (district !== -1) {
+		noStroke();
+		fill(0,0,0);
+		text('District ' + district.toString(), mouseX - 20, mouseY - 5);
+	}
+
+
 	// if (!checked) {
 	// 	for (let cell of cells) {
 	// 		cell.is_hovered = false;
@@ -510,8 +506,8 @@ function draw() {
 	// });
 
     // does fade out
-	noStroke();
-	fill(0, 0, 0, fade_out);
-	rect(0, 0, width, height)
-	fade_out = max(fade_out-5, 0);
+	// noStroke();
+	// fill(0, 0, 0, fade_out);
+	// rect(0, 0, width, height)
+	// fade_out = max(fade_out-5, 0);
 }
