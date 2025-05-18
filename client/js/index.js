@@ -38,6 +38,11 @@ function changeBar(){
 
     ratingBar.style.width = `${percentage}%`;
     ratingBar.innerText = `${Math.ceil(percentage)}%`;
+
+    if (percentage < 25) {
+        document.getElementById("gameOverPage").style.display = "block";
+        document.getElementById("gamePage").style.display = "none";
+    }
 }
 
 userPrompt.addEventListener("keydown", function(e) {
