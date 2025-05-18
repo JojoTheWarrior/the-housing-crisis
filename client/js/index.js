@@ -142,6 +142,8 @@ class Cell {
 		this.x = x;
 		this.y = y;
 		this.z_offset = 0;
+		this.is_hovered = false;
+		this.peaked = false;
 		this.animation = district * 700;
 		this.district = district;
 		this.colour = colour;
@@ -152,6 +154,15 @@ class Cell {
 		this.z_offset = 7 * Math.sin(2 * ((Date.now() - this.animation) / 1000));
 		if (this.district <= 0)
 			this.z_offset -= 15;
+
+		if (this.is_hovered) {
+			this.z_offset = 7 * Math.sin(2 * ((Date.now() - this.animation) / 1000));
+			if (Math.sin(2 * ((Date.now() - this.animation) / 1000)) >= 0.95)
+				this.peaked = true;
+		}
+
+		if (this.peaked)
+			this.z_offset = 14;
 
 		let x = ORIGIN.x - (APOTHEM_X * this.x) + (APOTHEM_X * this.y)
 		let y = ORIGIN.y + (APOTHEM_Y * this.x) + (APOTHEM_Y * this.y) - this.z_offset;
@@ -225,6 +236,7 @@ class Cell {
 					cell.is_hovered = true;
 				} else {
 					cell.is_hovered = false;
+					cell.peaked = false;
 				}
 				
 			}
@@ -400,12 +412,18 @@ function setup() {
 function draw() {
 	background(240,240,240);
 
-	let checked = false;
+	// let checked = false;
 	for (let cell of cells) {
 		cell.draw();
-		if (!checked && cell.check_hover())
-			checked = true;
+		// if (!checked && cell.check_hover())
+		// 	checked = true;
 	}
+	// if (!checked) {
+	// 	for (let cell of cells) {
+	// 		cell.is_hovered = false;
+	// 		cell.peaked = false;
+	// 	}
+	// }
 
 	// noStroke();
 	// fillGradient('linear', {
