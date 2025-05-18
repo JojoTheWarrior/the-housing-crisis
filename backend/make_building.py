@@ -37,13 +37,7 @@ def generate_building_image(building_type):
             if mime_type.startswith("image/"):
                 try:
                     image_bytes = base64.b64decode(part.inline_data.data)
-                    with open(f"./pre_{building_type}.png", "wb") as f:
-                        f.write(image_bytes)
-                    remove_background(f"./pre_{building_type}.png", f"./{building_type}.png")
-                    
-                    image = Image.open(f"./{building_type}.png").convert("RGBA")
-                    img_byte_arr = io.BytesIO()
-                    image.save(img_byte_arr, format='PNG')
+                    img_byte_arr = io.BytesIO(image_bytes)
                     img_byte_arr.seek(0)
                     return img_byte_arr.read()
                 except Exception as e:

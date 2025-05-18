@@ -11,7 +11,9 @@ let houseCost = 20000; //change as necessary
 let city_avg_house_price;
 let city_public_support;
 let game_state;
-let images;
+
+var images = [];
+var sprites = {};
 
 userPlay.addEventListener("click", function(){
     document.getElementById("landingPage").style.display = "none";
@@ -51,29 +53,58 @@ submissionButton.addEventListener("click", function(e) {
 });
 
 function submitPrompt() {
-  changeBar();
+  // changeBar();
   const promptText = document.getElementById("textPrompt").value;
   document.getElementById("textPrompt").value = '';
 
-  document.getElementById("cost").innerText = "$"+houseCost;
+  // document.getElementById("cost").innerText = "$"+houseCost;
 
   //testing
   document.getElementById("submittedPrompt").innerText = promptText;
+
+  showLoading();
 
   fetch("http://127.0.0.1:5000/send-prompt",
 	{
 	    headers: {
 	      'Accept': 'application/json',
 	      'Content-Type': 'application/json',
+	      'Access-Control-Allow-Origin': '*'
 	    },
 	    method: "POST",
-	    mode: 'no-cors',
+	    // mode: 'no-cors',
 	    body: JSON.stringify({
     		"prompt": promptText
 		})
 	})
-	.then(function(res){ console.log(res) })
-	.catch(function(res){ console.log(res) });
+	.then(function(res){
+		console.log("IS THIS RUNNING")
+		let response = res.json()
+		response.then((resp) => {
+			console.log("heyyy");
+			console.log(resp);
+			images = resp.images;
+			sprites = resp.sprites;
+
+			for (const [sprite, coords] of Object.entries(sprites)) {
+				for (let coord of coords) {
+					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+				}
+			}
+
+			document.getElementById("cost").innerText = "$" + resp.avg_house_price.toString();
+			approvalValue = resp.city_public_support * 100;
+			changeBar();
+			hideLoading();
+		})
+		// console.log(response.images) 
+	})
+	.catch(function(res){
+		console.log("Error!")
+		console.log(res)
+		hideLoading();
+
+	});
 
 
 
@@ -400,12 +431,32 @@ function send_district_coords() {
 	    headers: {
 	      'Accept': 'application/json',
 	      'Content-Type': 'application/json',
+	      'Access-Control-Allow-Origin': '*'
 	    },
 	    method: "POST",
-	    mode: 'no-cors',
+	    //mode: 'no-cors',
 	    body: JSON.stringify(send_data)
 	})
-	.then(function(res){ console.log(res) })
+	.then(function(res){
+		let response = res.json()
+		response.then((resp) => {
+			console.log("heyyy");
+			console.log(resp);
+			images = resp.images;
+			sprites = resp.sprites;
+
+			for (const [sprite, coords] of Object.entries(sprites)) {
+				for (let coord of coords) {
+					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+				}
+			}
+
+			document.getElementById("cost").innerText = "$" + resp.avg_house_price.toString();
+			approvalValue = resp.city_public_support * 100;
+			changeBar();
+			//hideLoading();
+		})
+	})
 	.catch(function(res){ console.log(res) });
 }
 
@@ -422,7 +473,7 @@ function setup() {
 	send_district_coords();
 
 	// images["temple"] = loadImage('../../temple.png');
-	cells[47].sprite = loadImage('../../temple.png');
+	//cells[47].sprite = loadImage('../../temple.png');
 }
 
     
