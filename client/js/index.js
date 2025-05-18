@@ -159,7 +159,7 @@ function hideLoading() {
     document.getElementById("loadingPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
 
-	if ((approvalValue / maxApprovalValue) * 100 < 80){
+	if ((approvalValue / maxApprovalValue) * 100 < 30){
 		document.getElementById("gamePage").style.display = "none";
 		document.getElementById("gameOverPage").style.display = "flex";
 	}
