@@ -51,29 +51,50 @@ submissionButton.addEventListener("click", function(e) {
 });
 
 function submitPrompt() {
-  changeBar();
+  // changeBar();
   const promptText = document.getElementById("textPrompt").value;
   document.getElementById("textPrompt").value = '';
 
-  document.getElementById("cost").innerText = "$"+houseCost;
+  // document.getElementById("cost").innerText = "$"+houseCost;
 
   //testing
   document.getElementById("submittedPrompt").innerText = promptText;
+
+  showLoading();
 
   fetch("http://127.0.0.1:5000/send-prompt",
 	{
 	    headers: {
 	      'Accept': 'application/json',
 	      'Content-Type': 'application/json',
+	      'Access-Control-Allow-Origin': '*'
 	    },
 	    method: "POST",
-	    mode: 'no-cors',
+	    // mode: 'no-cors',
 	    body: JSON.stringify({
     		"prompt": promptText
 		})
 	})
-	.then(function(res){ console.log(res) })
-	.catch(function(res){ console.log(res) });
+	.then(function(res){
+		console.log("IS THIS RUNNING")
+		let response = res.json()
+		response.then((resp) => {
+			console.log("heyyy");
+			console.log(resp);
+			document.getElementById("cost").innerText = "$" + resp.avg_house_price.toString();
+			console.log(resp.images);
+			approvalValue = resp.city_public_support * 100;
+			changeBar();
+			hideLoading();
+		})
+		// console.log(response.images) 
+	})
+	.catch(function(res){
+		console.log("Error!")
+		console.log(res)
+		hideLoading();
+
+	});
 
 
 
