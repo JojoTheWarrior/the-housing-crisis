@@ -24,6 +24,10 @@ html, body {
     text-align: center;   
 }
 
+#logo {
+    height: 500px;
+}
+
 #play {
     width: 100px;
     height: 60px;
