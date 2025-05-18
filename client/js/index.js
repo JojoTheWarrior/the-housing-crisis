@@ -146,7 +146,7 @@ function showLoading() {
 
 function hideLoading() {
     document.getElementById("loadingPage").style.display = "none";
-    document.getElementById("gamePage").style.display = "flex";
+    document.getElementById("gamePage").style.display = "block";
 }
 
 // test loading
