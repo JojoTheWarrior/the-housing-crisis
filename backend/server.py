@@ -159,7 +159,9 @@ def send_prompt():
             if coord not in taken:
                 leftover.append(coord)
 
-        print(leftover)
+        # print(leftover)[0,0]
+        if len(leftover) == 0:
+            return [0,0]
         return choice(leftover)
 
     def get_taken_values():
