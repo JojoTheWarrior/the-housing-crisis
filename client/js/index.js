@@ -83,17 +83,16 @@ function submitPrompt() {
 		})
 	})
 	.then(function(res){
-		console.log("IS THIS RUNNING")
 		let response = res.json()
 		response.then((resp) => {
-			console.log("heyyy");
-			console.log(resp);
 			images = resp.images;
 			sprites = resp.sprites;
 
+			console.log(resp);
+
 			for (const [sprite, coords] of Object.entries(sprites)) {
 				for (let coord of coords) {
-					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+					cells[coord[1] + coord[0] * (MAP_LENGTH + 1)].sprite = loadImage("data:image/png;base64," + images[sprite]);
 				}
 			}
 
@@ -102,7 +101,6 @@ function submitPrompt() {
 			changeBar();
 			hideLoading();
 		})
-		// console.log(response.images) 
 	})
 	.catch(function(res){
 		console.log("Error!")
@@ -432,14 +430,13 @@ function send_district_coords() {
 	.then(function(res){
 		let response = res.json()
 		response.then((resp) => {
-			console.log("heyyy");
 			console.log(resp);
 			images = resp.images;
 			sprites = resp.sprites;
 
 			for (const [sprite, coords] of Object.entries(sprites)) {
 				for (let coord of coords) {
-					cells[coord[1] + coord[0] * MAP_LENGTH].sprite = loadImage("data:image/png;base64," + images[sprite]);
+					cells[coord[1] + coord[0] * (MAP_LENGTH + 1)].sprite = loadImage("data:image/png;base64," + images[sprite]);
 				}
 			}
 
